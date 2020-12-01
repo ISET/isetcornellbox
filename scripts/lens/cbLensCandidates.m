@@ -20,13 +20,17 @@ thislens2.draw;
 point = psCreate(0,0,-10000); % Not sure where to use it.
 
 % This is a small number of numerical samples in the aperture.  
-nSamples = 351;
-apertureMiddleD = 8;   % mm, - Maximum aperture size: How would this applied?
+nSamples = 100;
+apertureMiddleD = 16;   % mm, - Maximum aperture size: How would this applied?
 
 lensOne = lensC('apertureSample', [nSamples nSamples], ...
             'fileName', lensFileNameOne,...
             'apertureMiddleD', apertureMiddleD);
 
+%% Q1: focal length doesn't match - why is that?
+fl = lensOne.focalLength;
+
+%%
 lensOne.draw
 lens.bbmCreate;
 
@@ -37,7 +41,8 @@ desiredFL = 27; % mm.
 
 scaledLensOne = lensC('apertureSample', [nSamples nSamples], ...
             'fileName', lensFileNameOne,...
-            'apertureMiddleD', apertureMiddleD);
+            'apertureMiddleD', apertureMiddleD,...
+            'focal length', 100.2);
 scaleFactor = desiredFL / scaledLensOne.focalLength;
 
 % Apply scaling
@@ -52,24 +57,28 @@ scaledLensOne.focalLength = desiredFL;
 scaledLensOne.name = sprintf('reversed.telephoto.42deg.%.1fmm', desiredFL);
 scaledLensOne.draw
 
+%% Q2 - what is the difference between these two parameter?
 % Confirm focal length
 fL = scaledLensOne.get('bbm', 'effectivefocallength');
 imageFocalPoint = scaledLensOne.get('bbm', 'imageFocalPoint');
 
+%% Q3 - to be checked.
 %% Ray trace the points to the film
 %  Check that the points converge at some distance in front of the
 %  sensor (to illustrate this convergence we place the sensor far away
 %  from the lens).
 
 wave = lens.get('wave');
-sensor = filmC('position', [0 0 0], ...
+sensor = filmC('position', [0 0 100], ...
     'size', [5 5], ...
     'resolution',[300 300],...
     'wave', wave);
 camera = psfCameraC('lens',scaledLensOne,'film',sensor,'pointsource',point);
-camera.estimatePSF(true);
+camera.estimatePSF(false);
 
 %%
 oi = camera.oiCreate;
 oiWindow(oi);
-oiPlot(oi,'illuminance mesh linear');
+
+%% Q4 - how to visualize the ray trace process as shown in the wiki?
+% https://github.com/ISET/isetlens/wiki
