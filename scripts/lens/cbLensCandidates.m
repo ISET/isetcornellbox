@@ -5,80 +5,100 @@
 %% Init
 ieInit;
 
-%% Create two lenses
-lensFileNameOne = 'reversed.telephoto.42deg.100mm.dat';
-thislens = lensC('filename', lensFileNameOne);
-thislens.draw;
-
-lensFileNameTwo = 'reversed.telephoto.37deg.100mm.dat';
-thislens2 = lensC('filename', lensFileNameTwo);
-thislens2.draw;
-
-%% Use the first lens to get myself familiar with isetlens
-
-% Create an on-center, far-away point
-point = psCreate(0,0,-10000); % Not sure where to use it.
-
+%% Basic
 % This is a small number of numerical samples in the aperture.  
-nSamples = 100;
-apertureMiddleD = 16;   % mm, - Maximum aperture size: How would this applied?
+nSamples = 500;
+apertureMiddleD = 10;   % mm, - Maximum aperture size
 
-lensOne = lensC('apertureSample', [nSamples nSamples], ...
-            'fileName', lensFileNameOne,...
-            'apertureMiddleD', apertureMiddleD);
-
-%% Q1: focal length doesn't match - why is that?
+%% Create two lenses. Use the first lens for learning
+% lensFileNameOne = 'reversed.telephoto.42deg.100mm.dat';
+lensFileNameOne = 'dgauss.22deg.3.0mm.dat';
+% lensFileNameOne = 'fisheye.87deg.12.5mm.json';
+lensOne = lensC('filename', lensFileNameOne,...
+                'apertureSample', [nSamples nSamples],...
+                'apertureMiddleD', apertureMiddleD);
+% lensOne.draw;
+%{
+% Light rays illustrate Cardinal points
+%}
+%{
+lensFileNameTwo = 'reversed.telephoto.37deg.100mm.dat';
+lensTwo = lensC('filename', lensFileNameTwo,...
+                'apertureSample', [nSamples nSamples],...
+                'apertureMiddleD', apertureMiddleD);
+lensTwo.get('bbm', 'effectivefocallength')
+lensTwo.draw;
+%}
+%{
+%% Section: figure out focal length difference (DONE)
+% Explanaiton: current lenC.focalLength is actually the image point for a
+% point source in object space. Might change it(?)
+lensOne.bbmCreate;
 fl = lensOne.focalLength;
+%}
 
-%%
-lensOne.draw
-lens.bbmCreate;
-
-%% Create a scaled lens
+%% Section: scale the focal length (DONE)
 % Specify a desired lens
 % https://www.dxomark.com/google-pixel-4a-camera-review-excellent-single-camera-smartphone/
-desiredFL = 27; % mm. 
+% {
+curFL = mean(lensOne.get('bbm', 'effective focal length'));
+% https://www.edmundoptics.com/knowledge-center/application-notes/imaging/understanding-focal-length-and-field-of-view/
+newFOV = 77; % Pixel phone rear camera
+filmSz = 1.4 * 4000 / 1000; % mm
 
-scaledLensOne = lensC('apertureSample', [nSamples nSamples], ...
-            'fileName', lensFileNameOne,...
-            'apertureMiddleD', apertureMiddleD,...
-            'focal length', 100.2);
-scaleFactor = desiredFL / scaledLensOne.focalLength;
+[scaleFactor, desiredFL] = lensOne.fovScale(newFOV, filmSz);
+lensOne.scale(scaleFactor);
+fovCheck = lensOne.get('fov', filmSz);
+%}
 
-% Apply scaling
-for ii = 1:numel(scaledLensOne.surfaceArray)
-    scaledLensOne.surfaceArray(ii).sRadius = scaledLensOne.surfaceArray(ii).sRadius * scaleFactor;
-    scaledLensOne.surfaceArray(ii).sCenter = scaledLensOne.surfaceArray(ii).sCenter * scaleFactor;
-    scaledLensOne.surfaceArray(ii).apertureD = scaledLensOne.surfaceArray(ii).apertureD * scaleFactor;
-end
+%% Section: learn how the bbm works (PARTIALY DONE)
+fL = lensOne.get('bbm', 'effectivefocallength');
+imageFocalPoint = lensOne.get('bbm', 'imageFocalPoint');
 
-scaledLensOne.bbmCreate;
-scaledLensOne.focalLength = desiredFL;
-scaledLensOne.name = sprintf('reversed.telephoto.42deg.%.1fmm', desiredFL);
-scaledLensOne.draw
+%% Section: Modify estimatePSF function so that the ray trace can be visualized
 
-%% Q2 - what is the difference between these two parameter?
-% Confirm focal length
-fL = scaledLensOne.get('bbm', 'effectivefocallength');
-imageFocalPoint = scaledLensOne.get('bbm', 'imageFocalPoint');
-
-%% Q3 - to be checked.
-%% Ray trace the points to the film
+% Ray trace the points to the film
 %  Check that the points converge at some distance in front of the
 %  sensor (to illustrate this convergence we place the sensor far away
 %  from the lens).
 
-wave = lens.get('wave');
-sensor = filmC('position', [0 0 100], ...
-    'size', [5 5], ...
+% Create an on-center, far-away point
+point = psCreate(0,0,-1e6);
+pointTwo = psCreate(0, -1, -10);
+
+wave = lensOne.get('wave');
+sensor = filmC('position', [0 0 lensOne.focalLength], ...
+    'size', [filmSz filmSz], ...
     'resolution',[300 300],...
     'wave', wave);
-camera = psfCameraC('lens',scaledLensOne,'film',sensor,'pointsource',point);
-camera.estimatePSF(false);
+camera = psfCameraC('lens',lensOne,'film',sensor,'pointsource',pointTwo);
+nLines = 100;
+camera.estimatePSF('jitter flag',false, 'n line', nLines);
 
-%%
+%{
+%% Visualize PSF
 oi = camera.oiCreate;
 oiWindow(oi);
+%}
 
-%% Q4 - how to visualize the ray trace process as shown in the wiki?
-% https://github.com/ISET/isetlens/wiki
+%% Write out the lens file
+lensName = strcat('dgauss.77deg.', num2str(desiredFL), 'mm.json');
+fullName = fullfile(ilensRootPath, 'data', 'lens', lensName);
+lensOne.fileWrite(fullName);
+
+%%
+lensTwo = lensC('file name', lensName);
+lensTwo.draw;
+
+%%
+pointThree = psCreate(0, -1, -3);
+
+wave = lensTwo.get('wave');
+sensor = filmC('position', [0 0 lensTwo.focalLength], ...
+    'size', [filmSz filmSz], ...
+    'resolution',[300 300],...
+    'wave', wave);
+camera = psfCameraC('lens',lensTwo,'film',sensor,'pointsource',pointThree);
+nLines = 200;
+camera.estimatePSF('jitter flag',false, 'n line', nLines);
+%% TODO: check aspherics structure
