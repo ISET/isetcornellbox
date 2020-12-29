@@ -1,13 +1,81 @@
 %% Estimate the illuminant SPD from the Cornell Box and the red/green/white reflectances
 %
+%  These were measurements made on December 11, 2020 in the lab.
+%
+%  We put the several paper targets in the Gretag light booth.  We measured
+%  with the internal light on and with the tungsten studio lamp on.
+
+%% December 28, 2020
+
+chdir(fullfile(cboxRootPath,'data','raw','11-Dec-2020'));
+
+%% Not sure what both lights means.  Maybe studio and MCC?
+
+% These spd look like the Tungsten (studio) lamp on the Gretag Light booth
+[lgt(:,1),wave,] = ieReadSpectra('spd-11-Dec-2020-13-29-32.mat');
+[lgt(:,2)] = ieReadSpectra('spd-11-Dec-2020-13-29-03.mat');
+[lgt(:,3)] = ieReadSpectra('spd-11-Dec-2020-13-29-32.mat');
+lgt = mean(lgt,2);
+
+ieNewGraphWin;
+plotRadiance(wave,lgt);
+% plotReflectance(wave,whiteRadiance./lgt);
+
+% These look like good reflectance estimates
+[redRadiance,wave] = ieReadSpectra('red-bothlights-1.mat');
+[greenRadiance] = ieReadSpectra('green-bothlights-1.mat');
+[whiteRadiance] = ieReadSpectra('white-bothlights-1');
+
+plotRadiance(wave,lgt)
+plotReflectance(wave, greenRadiance ./ lgt);
+plotReflectance(wave, redRadiance ./ lgt);
+plotReflectance(wave, whiteRadiance ./ lgt); set(gca,'ylim',[0 1]);
+
+%% So let's go with these reflectances for now
+
+gRef = greenRadiance ./ lgt;
+rRef = redRadiance   ./ lgt;
+wRef = whiteRadiance ./lgt;
+data = [rRef(:),gRef(:),wRef(:)];
+
+comment = 'Red, Green, White reflectance estimates from Dec 11.  cboxSpectra.m';
+thisFile = fullfile(cboxRootPath,'data','surfaces','cboxSurfaces.mat');
+ieSaveSpectralFile(wave,data,comment,thisFile);
+
+[cbSurf,wave] = ieReadSpectra(thisFile);
+ieNewGraphWin;
+plotReflectance(wave,cbSurf);
+
+%{
+  % The older one was cboxSurfaces.mat
+  [tmp,wave] = ieReadSpectra('cboxWalls.mat');
+  plotReflectance(wave,tmp);
+%}
+
+%% Not great estimates from measurements within the cornell box
+%{
+lgt = ieReadSpectra('cbox-lights-1.mat');
+plotRadiance(wave,lgt);
+
+[redRadiance,wave] = ieReadSpectra('cbox-redbackwall-1.mat');
+[greenRadiance]    = ieReadSpectra('cbox-green-backwall-1.mat');
+[whiteRadiance]    = ieReadSpectra('cbox-whitebackwall-1.mat');
+ieNewGraphWin;
+
+plotReflectance(wave,whiteRadiance ./ lgt); set(gca,'ylim',[0 1])
+plotReflectance(wave,greenRadiance ./ lgt); set(gca,'ylim',[0 1])
+plotReflectance(wave,redRadiance ./ lgt);   set(gca,'ylim',[0 1])
+%}
+
+%% OLD - Deprecated measurements.  Seem pretty bad, actually.
+
 %  These were measurements of the white calibration target made on October
 %  4, 2020 in the lab.
 %
-% We put the white target in the bigger Cornell box, turned on the light,
-% and measured twice in the middle and once at the edge of the target.
+%  We put the white target in the bigger Cornell box, turned on the light,
+%  and measured twice in the middle and once at the edge of the target.
 %
 
-%%
 dataDir = '/Volumes/GoogleDrive/My Drive/Data/Cornell box/Spectral calibrations/04-Oct-2020/cbox-light';
 
 % These are the lights
