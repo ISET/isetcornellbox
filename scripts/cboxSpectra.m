@@ -4,6 +4,8 @@
 %
 %  We put the several paper targets in the Gretag light booth.  We measured
 %  with the internal light on and with the tungsten studio lamp on.
+%
+%  Also includes bunny section.
 
 %% December 28, 2020
 
@@ -51,6 +53,26 @@ plotReflectance(wave,cbSurf);
   [tmp,wave] = ieReadSpectra('cboxWalls.mat');
   plotReflectance(wave,tmp);
 %}
+
+%% The bunny reflectance.
+
+% Not really great either.  Measured in the Cornell Box.   Worth
+% understanding how this happens in complex environments.
+lgt(:,1) = ieReadSpectra('cbox-lights-1.mat');
+lgt(:,2) = ieReadSpectra('cbox-lights-2.mat');
+lgt = mean(lgt,2);
+plotRadiance(wave,lgt);
+
+[bunnyRadiance(:,1)] = ieReadSpectra('cbox-bunny-backwall-1.mat');
+[bunnyRadiance(:,2)] = ieReadSpectra('cbox-bunny-backwall-2.mat');
+[bunnyRadiance(:,3)] = ieReadSpectra('cbox-bunny-backwall-3.mat');
+bunnyRadiance = mean(bunnyRadiance,2);
+
+bunnyRef = bunnyRadiance ./ lgt;
+plotRadiance(wave,bunnyRadiance);
+plotRadiance(wave,[bunnyRadiance(:),lgt(:)]);
+
+plotReflectance(wave,bunnyRef);
 
 %% Not great estimates from measurements within the cornell box
 %{
