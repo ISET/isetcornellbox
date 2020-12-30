@@ -5,18 +5,18 @@
 ieInit;
 
 %% Load optical image data
-oiPath = fullfile(cboxRootPath, 'local', 'CBLens_first_attempt.mat');
+oiName = 'CBLens_MCC';
+oiPath = fullfile(cboxRootPath, 'local', strcat(oiName, '.mat'));
 load(oiPath, 'oi');
+
 %{
     oiWindow(oi);
     oiSet(oi, 'gamma', 0.5);
 %}
 
-%% Scale the oi
-
 %% Create IMX363 sensor
-sensorPx = sensorCreate('IMX363');
-sensorPx = sensorSet(sensorPx, 'exp time', 0.0141); % Exp time from real image
+sensorPx = sensorCreate('IMX363', [], 'iso speed', 418);
+sensorPx = sensorSet(sensorPx, 'exp time', 0.141 / 2); % Exp time from real image
 sensorPx = sensorSet(sensorPx, 'name', 'Pixel sensor');
 sensorPx = sensorSetSizeToFOV(sensorPx, oiGet(oi, 'fov'), oi);
 
