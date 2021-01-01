@@ -2,16 +2,23 @@
 % Create optical image for Cornell Box simulation
 
 %% Initialize ISET and Docker
-ieInit;
+% ieInit;
 if ~piDockerExists, piDockerConfig; end
 
 %%
 thisR = piRecipeDefault('scene name', 'cornell box reference');
 
-thisR.set('film resolution',[320 320]);
-nRaysPerPixel = 128;
+thisR.set('film resolution',[160 160]);
+nRaysPerPixel = 8;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
+%%
+% The origin is in the bottom center of the box, the depth of the box is 
+% 30 cm, the camera is 10 cm from the front edge. The position of the 
+% camera should be set to 10 + 15 = 25 cm from the origin
+from = thisR.get('from');
+newFrom = [0 0.12 -0.25];
+thisR.set('from', newFrom);
 %%
 piLightDelete(thisR, 'all');
 % thisR.assets.show
@@ -78,27 +85,47 @@ wReflSPD = piMaterialCreateSPD(wave, wRefl);
 
 % Set spectral reflectance
 thisR.set('material', rWallMat, 'kd value', rReflSPD);
+thisR.set('material', rWallMat, 'type', 'matte');
 % thisR.get('material', rWallMat, 'kd value')
 thisR.set('material', gWallMat, 'kd value', gReflSPD);
+thisR.set('material', gWallMat, 'type', 'matte');
 thisR.set('material', bkWallMat, 'kd value', wReflSPD);
+thisR.set('material', bkWallMat, 'type', 'matte');
 thisR.set('material', tWallMat, 'kd value', wReflSPD);
+thisR.set('material', tWallMat, 'type', 'matte');
 thisR.set('material', btmWallMat, 'kd value', wReflSPD);
-
+thisR.set('material', btmWallMat, 'type', 'matte');
 % thisR.assets.show
 
-%% Remove the two cubes
-assetName = 'CubeSmall_B';
-thisR.set('asset', assetName, 'chop');
+%% Set the two cubes
 assetName = 'CubeLarge_B';
-thisR.set('asset', assetName, 'chop');
+thisR.set('asset', assetName, 'world translate', [-0.01 0 0]);
+cubeLMat = thisR.get('assets', 'CubeLarge_O', 'material name');
+thisR.set('material', cubeLMat, 'kd value', wReflSPD);
+thisR.set('material', cubeLMat, 'type', 'matte');
+% thisR.set('asset', assetName, 'chop');
+thisR.set('asset', 'CubeLarge_O', 'world rotate', [0 -28 0]);
+
+assetName = 'CubeSmall_O';
+T1 = thisR.set('asset', assetName, 'world translate', [0.005 0 0]);
+T2 = thisR.set('assets', 'CubeSmall_O', 'world rotate', [0 20 0]);
+cubeSMat = thisR.get('assets', 'CubeSmall_O', 'material name');
+thisR.set('material', cubeSMat, 'kd value', wReflSPD);
+thisR.set('material', cubeSMat, 'type', 'matte');
+% thisR.set('asset', assetName, 'chop');
 
 %% Add bunny
 assetTreeName = 'bunny';
-rootST = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
-thisR.get('asset', 'Bunny_O', 'world position')
+rootST = thisR.set('asset', T1.name, 'graft with materials', assetTreeName);
 % thisR.assets.show
-thisR.set('asset', rootST.name, 'world translate', [0.05 0 -0.05]);
-thisR.set('asset', rootST.name, 'chop');
+thisR.set('asset', rootST.name, 'world translate', [0.001 0.025+0.005 0]);
+thisR.set('asset', 'Bunny_O', 'scale', 1.25);
+thisR.set('asset', rootST.name, 'world rotate', [0 80 0])
+% thisR.set('asset', rootST.name, 'chop');
+bunnyMatName = thisR.get('assets', rootST.name, 'material name');
+
+thisR.set('material', bunnyMatName, 'kd value', wReflSPD);
+thisR.set('material', bunnyMatName, 'type', 'matte');
 %% Add Coordinate
 assetTreeName = 'coordinate';
 rootST2 = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
@@ -118,19 +145,24 @@ T2 = thisR.set('asset', rootST4.name, 'world translate', [0 0 0.1]);
 % thisR.assets.show
 % thisR.set('asset', rootST4.name, 'chop');
 %% In the case of using pinhole
+% {
 % Do a quick rendering to get the scaling factor
 thisR.set('film resolution',[320 320]);
 nRaysPerPixel = 32;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
-
+% thisR.set('film diagonal',10); % mm
+thisR.set('fov', 77);
 % Write and render
 piWrite(thisR);
 
 [scene, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
 sceneName = 'CBPinhole';
 scene = sceneSet(scene, 'name', sceneName);
-
+sceneWindow(scene);
+sceneSet(scene, 'gamma', 0.5);
+sceneSavePath = fullfile(cboxRootPath, 'local', strcat('cbScene', '.mat'));
+save(sceneSavePath, 'scene');
 % Normalize the max peakLuminance with nRaysPerPixel
 meanLuminance = sceneGet(scene, 'mean luminance');
 % scale = meanLuminance / nRaysPerPixel;
@@ -157,11 +189,12 @@ sceneWindow(scene);
 sceneSet(scene, 'gamma', 0.5);
 %}
 sfPerRay = scaleFactor / nRaysPerPixel;
+%}
 %% In the case of using lens
-% {
+%{
 %% Specify new rendering setting
 thisR.set('film resolution',[320 320]);
-nRaysPerPixel = 128;
+nRaysPerPixel = 32;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
 %% Build a lens
@@ -177,8 +210,8 @@ piWrite(thisR);
 
 % Render 
 [oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
-oiName = 'CBLens_MCC';
-oiSet(oi, 'name', oiName);
+oiName = 'CBLens_MCC_Bunny_LQ';
+oi = oiSet(oi, 'name', oiName);
 
 %%
 meanIllu = oiGet(oi, 'mean illuminance');
