@@ -4,15 +4,16 @@
 %% Initialize ISET
 ieInit;
 
-% {
+%% In the case of scene
+%{
 load(sceneSavePath, 'scene');
 oi = oiCreate;
 oi = oiCompute(oi, scene);
 illu = oiGet(oi, 'mean illuminance');
 oi = oiSet(oi, 'mean illuminance', 2.5 * 0.9098);
 %}
-%{
 %% Load optical image data
+% {
 oiName = 'CBLens_MCC_Bunny_HQ';
 oiPath = fullfile(cboxRootPath, 'local', strcat(oiName, '.mat'));
 load(oiPath, 'oi');
@@ -54,10 +55,3 @@ ip = ipCreate;
 ip = ipSet(ip,'render demosaic only',true);
 ip = ipCompute(ip, sensorPx);
 ipWindow(ip);
-
-%% TODO:
-%{
-1. Lens shading
-2. 
-%}
-
