@@ -7,6 +7,7 @@ ieInit;
 %%%%%%%%%%%%%%%%%%%%% Create sensor for illuminant A %%%%%%%%%%%%%%%%%%%%%%
 imgAName = 'IMG_20201024_123128.dng';
 % Select the corner points: bottom left, bottom right, top right, top left
+% cpDay = chartCornerpoints(camera_day);   % Select corners
 cpAR = [38 222; 316 224; 314 41; 40 40];
 % Read the rectangle of the image
 thisRect = [1860  2010  350  255]; %col, row, width, height
@@ -21,6 +22,7 @@ chartRectsDraw(sensorAR,rectsAR);  % Visualize the rectangles
 %%%%%%%%%%%%%%%%%%%% Create sensor for illuminant CWF %%%%%%%%%%%%%%%%%%%%%                                               
 imgCWFName = 'IMG_20201024_122900.dng';
 % Select the corner points: bottom left, bottom right, top right, top left
+% cpDay = chartCornerpoints(camera_day);   % Select corners
 cpCWFR = [62 218; 337 222; 337 38; 63 37];
 % Read the rectangle of the image
 thisRect = [1860  2010  370  290]; %col, row, width, height
@@ -35,6 +37,7 @@ chartRectsDraw(sensorCWFR,rectsCWFR);  % Visualize the rectangles
 %%%%%%%%%%%%%%%%%%%% Create sensor for illuminant Day %%%%%%%%%%%%%%%%%%%%%                                               
 imgDayName = 'IMG_20201024_122631.dng';
 % Select the corner points: bottom left, bottom right, top right, top left
+% cpDay = chartCornerpoints(camera_day);   % Select corners
 cpDayR = [73 218; 344 222; 344 39; 73 36];
 % Read the rectangle of the image
 thisRect = [1860  2010  370  290]; %col, row, width, height
@@ -111,7 +114,7 @@ sensorPlot(sensorT, 'color filters');
 %}
 % cbMccPredEval('measurement', rgbMeanR, 'prediction', pred);
 %% Diagonal transformation
-L = cbMccFit(rgbMeanS, rgbMeanR, 'method', 'diag');
+diagL = cbMccFit(rgbMeanS, rgbMeanR, 'method', 'diag');
 predDiag = rgbMeanS * diagL;
 % Plot the predicted color filter
 sensorT = sensorAS;
@@ -123,7 +126,7 @@ sensorPlot(sensorT, 'color filters');
 %}
 % cbMccPredEval('measurement', rgbMeanR, 'prediction', predDiag);
 %% Constrained lsq equation
-L = cbMccFit(rgbMeanS, rgbMeanR, 'nonnegative');
+consL = cbMccFit(rgbMeanS, rgbMeanR, 'method', 'nonnegative');
 predCons = rgbMeanS * consL;
 % Plot the predicted color filter
 sensorT = sensorAS;

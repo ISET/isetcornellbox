@@ -13,7 +13,7 @@ thisR = cbBoxCreate;
 % 30 cm, the camera is 10 cm from the front edge. The position of the 
 % camera should be set to 10 + 15 = 25 cm from the origin
 from = thisR.get('from');
-newFrom = [-0.01 0.10 -0.25];
+newFrom = [-0.01 0.10 -0.35];% This is the place where we can see more
 thisR.set('from', newFrom);
 newTo = newFrom + [0 0 1]; % The camera is horizontal
 thisR.set('to', newTo);
@@ -34,6 +34,9 @@ thisR.set('asset', rootST.name, 'world translate', [0.008 0.025+0.005 0]);
 thisR.set('asset', 'Bunny_O', 'scale', 1.3);
 thisR.set('asset', rootST.name, 'world rotate', [0 85 0])
 bunnyMatName = thisR.get('assets', rootST.name, 'material name');
+wave = 400:10:700;
+refl = ieReadSpectra('cboxSurfaces', wave);
+wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 % thisR.assets.show
 
@@ -71,17 +74,20 @@ sceneSet(scene, 'gamma', 0.5);
 %% In the case of using lens
 % {
 %% Specify new rendering setting
-thisR.set('film resolution',[320 320]);
-nRaysPerPixel = 32;
+thisR.set('film resolution',[2048 2048]);
+nRaysPerPixel = 2048;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
 %% Build a lens
 % lensfile = 'reversed.telephoto.77deg.3.5201mm.json';
 lensfile  = 'dgauss.77deg.3.5201mm.json';  
+%{
+lens
+%}
 fprintf('Using lens: %s\n',lensfile);
 thisR.camera = piCameraCreate('omni','lensFile',lensfile);
 thisR.set('aperture diameter', 2.5);
-thisR.set('film diagonal',7); % mm
+thisR.set('film diagonal',5.6); % mm
 %% Write and render
 piWrite(thisR);
 % Render 

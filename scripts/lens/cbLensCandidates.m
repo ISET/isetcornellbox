@@ -8,7 +8,7 @@ ieInit;
 %% Basic
 % This is a small number of numerical samples in the aperture.  
 nSamples = 500;
-apertureMiddleD = 10;   % mm, - Maximum aperture size
+apertureMiddleD = 5;   % mm, - Maximum aperture size
 
 %% Create two lenses. Use the first lens for learning
 % lensFileNameOne = 'reversed.telephoto.42deg.100mm.dat';
@@ -29,14 +29,6 @@ lensTwo = lensC('filename', lensFileNameTwo,...
 lensTwo.get('bbm', 'effectivefocallength')
 lensTwo.draw;
 %}
-%{
-%% Section: figure out focal length difference (DONE)
-% Explanaiton: current lenC.focalLength is actually the image point for a
-% point source in object space. Might change it(?)
-lensOne.bbmCreate;
-fl = lensOne.focalLength;
-%}
-
 %% Section: scale the focal length (DONE)
 % Specify a desired lens
 % https://www.dxomark.com/google-pixel-4a-camera-review-excellent-single-camera-smartphone/
@@ -44,7 +36,7 @@ fl = lensOne.focalLength;
 curFL = mean(lensOne.get('bbm', 'effective focal length'));
 % https://www.edmundoptics.com/knowledge-center/application-notes/imaging/understanding-focal-length-and-field-of-view/
 newFOV = 77; % Pixel phone rear camera
-filmSz = 1.4 * 4000 / 1000; % mm
+filmSz = 1.4 * 4032 / 1000; % mm
 
 [scaleFactor, desiredFL] = lensOne.fovScale(newFOV, filmSz);
 lensOne.scale(scaleFactor);

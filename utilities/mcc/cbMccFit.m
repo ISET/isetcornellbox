@@ -17,6 +17,8 @@ switch method
             L(ii, ii) = rgbMeanS(:, ii) \ rgbMeanR(:, ii);
         end
     case {'nonnegative'}
+        sensor = sensorCreate('IMX363');
+        cfS = sensorGet(sensor, 'color filters');
         % argmin_x = 0.5|Cx-d|^2 st Ax <= b
         C = rgbMeanS; d = rgbMeanR;
         A = -cfS; b = zeros(size(A, 1), 1);

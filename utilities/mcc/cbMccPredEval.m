@@ -17,6 +17,8 @@ axis equal
 xlabel('prediction')
 ylabel('measurement')
 
+%% Get sample size
+szS = size(rgbMeanS, 1);
 %% Block by block check
 colorList = ['r', 'g', 'b'];
 ieNewGraphWin;
@@ -33,7 +35,7 @@ for ii=1:24
     axis square
     axis equal    
 end
-
+if szS > 24
 ieNewGraphWin;
 for ii=25:48
     subplot(6, 4, ii-24);
@@ -48,7 +50,9 @@ for ii=25:48
     axis square
     axis equal    
 end
+end
 
+if szS > 48
 ieNewGraphWin;
 for ii=49:72
     subplot(6, 4, ii-48);
@@ -62,5 +66,6 @@ for ii=49:72
     identityLine;
     axis square
     axis equal    
+end
 end
 end

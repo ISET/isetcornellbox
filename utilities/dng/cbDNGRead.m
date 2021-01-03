@@ -20,10 +20,10 @@ p = inputParser;
 p.addRequired('imgName', @ischar);
 vFunc = @(x)(isnumeric(x) || isa(x,'images.roi.Rectangle'));
 p.addParameter('crop',[],vFunc);
-p.addParameter('deomsiac', false, @isbool);
+p.addParameter('demosaic', false, @islogical);
 p.parse(imgName, varargin{:})
 crop = p.Results.crop;
-demos = p.Results.demosiac;
+demos = p.Results.demosaic;
 
 %% Read sensor
 [sensor, info] = sensorDNGRead(imgName, 'crop',crop);

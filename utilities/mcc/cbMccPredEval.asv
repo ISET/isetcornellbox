@@ -1,6 +1,0 @@
-function cbMccPredEval(rgbMeanR, rgbMeanS)
-%%
-p = inputParser;
-p.addParameter('realdata',[1], @ismatrix);
-p.addRequired('sun', @ismatrix);
-end

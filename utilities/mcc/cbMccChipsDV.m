@@ -5,7 +5,7 @@ varargin = ieParamFormat(varargin);
 p = inputParser;
 p.addRequired('sensorData', @(x)(ischar(x)||isstruct(x))); % File name or a sensor struct
 p.addParameter('cornerpoint', [],@ismatrix);
-p.addParameter('crop', [], @isvector);
+p.addParameter('crop', [], @isnumeric);
 p.addParameter('blackboarder', true, @isbool);
 p.parse(sensorData, varargin{:});
 crop = p.Results.crop;
@@ -21,9 +21,6 @@ else
 end
 
 if ~isempty(cornerPoint)
-    [rects, mLocs, pSize] = chartRectangles(cornerPoint,4,6,0.5,blackBorder);
-    nPixel = round(pSize(1)/4);
-    rgbMean = chartRectsData(sensor,mLocs,nPixel,false,'dv'); %returns digital values
-    rgbMean = rgbMean - sensorGet(sensor,'black level');
+    [rgbMean, rects] = cbMccRGBMean(sensor, cornerPoint, blackBorder);
 end
 end
