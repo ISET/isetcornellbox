@@ -45,6 +45,10 @@ thisRect = [1860  2010  370  290]; %col, row, width, height
 [sensorDayR, infoDayR, rgbMeanDayR, rectsDayR] = cbMccChipsDV(imgDayName,...
                                                     'corner point', cpDayR,...
                                                     'crop', thisRect);
+%{
+sensorWindow(sensorDayR);
+chartRectsDraw(sensorDayR,rectsDayR);  % Visualize the rectangles
+%}                                                   
 %% RGB value of MCC under illuminant A, CWF and Day. 
 rgbMeanR = [rgbMeanAR; rgbMeanCWFR;rgbMeanDayR];
 %% PART II: Compute simulated sensor
