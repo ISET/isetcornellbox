@@ -10,7 +10,7 @@ thisRect = [1844 1808 500 350]; %col, row, width, height
 % cpR = chartCornerpoints(sensorMcc);   % Select corners
 cpR = [14 332; 489 332; 484 12; 12 13];
 % Read DNG files and other info
-[sensorMcc, infoR, rgbMeanR, roisR] = cbMccChipsDV(imgName1,...
+[sensorMcc, infoR, rgbMeanCBR, roisR] = cbMccChipsDV(imgName1,...
                                                     'corner point', cpR,...
                                                     'crop', thisRect);
 %{
@@ -51,21 +51,30 @@ rectS = [1100 1280 330 220];
 sensorS = sensorCrop(sensorS, rectS);
 % cpS = chartCornerpoints(sensorS);
 cpS = [15 210; 316 209; 317 10; 14 11];
-[rgbMeanS, roisS] = cbMccRGBMean(sensorS, cpS, true);
+[rgbMeanCBS, roisS] = cbMccRGBMean(sensorS, cpS, true);
 
 %{
 sensorWindow(sensorS);
 chartRectsDraw(sensorS,roisS);  % Visualize the rectangles
 %}
 
+
 %%
-cbMccPredEval('prediction', rgbMeanS,...
-              'measurement', rgbMeanR);
+% Calculate scale factor due to illumination difference
+illuSF = rgbMeanCBS(:) \ rgbMeanCBR(:);
+rgbMeanSScaled = rgbMeanCBS * illuSF;
+cbMccPredEval('prediction', rgbMeanSScaled ,...
+              'measurement', rgbMeanCBR);
+
+% Calculate relative mean absolute error
+mean(abs(rgbMeanSScaled(:) - rgbMeanCBR(:)) ./ rgbMeanCBR(:)) * 100
+
+
 %%
 % Greytag booth
 % MCC analysis for color filter
 % Analysis on lamp illumination
 % 
-% Show rgb values in cb is different from greytag light
+% Show rgb values in cb is different from greytag lights
 % Compare the rgb value w/ red and green wall and w/ white surface (for
 % indirect light), and cubes
