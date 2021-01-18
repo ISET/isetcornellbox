@@ -16,7 +16,7 @@ mccName    = p.Results.mccname;
 %% Compute scene and oi
 % scene
 scene = sceneCreate('macbeth', patchSize, wave,...
-                        mccName);
+                        mccName, true);
 preserveMean = false;
 scene = sceneAdjustIlluminant(scene, illuminant, preserveMean);
 scene = sceneSet(scene, 'name', illuminant);

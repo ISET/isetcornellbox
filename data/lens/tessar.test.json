@@ -1,0 +1,55 @@
+{
+ "name": "Dogmar.first",
+ "description": " Description: Tessar lens ZLY",
+ "type": "multi element lens",
+ "surfaces": [
+  {
+   "radius": 15.68,
+   "thickness": 2.38,
+   "ior": 1.65844,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -891.19,
+   "thickness": 2.57,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -34.10,
+   "thickness": 0.8,
+   "ior": 1.6250,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 14.84,
+   "thickness": 4.34,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 0,
+   "thickness": 4.34,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -121.17,
+   "thickness": 0.800,
+   "ior": 1.5481,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 18.96,
+   "thickness": 2.62,
+   "ior": 1.65844,
+   "semi_aperture": 7
+  },
+  {
+   "radius": -21.65,
+   "thickness": 0,
+   "ior": 1,
+   "semi_aperture": 7
+  }
+ ]
+}

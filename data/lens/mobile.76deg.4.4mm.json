@@ -1,0 +1,95 @@
+{
+ "name": "mobile.76deg.4.4mm",
+ "description": " Description: ashperical lens ZLY",
+ "type": "multi element lens",
+ "surfaces": [
+  {
+   "radius": 3.134,
+   "thickness": 1.413,
+   "ior": 1.531,
+   "semi_aperture": 1.077,
+   "aspheric_coefficients": [0.05,-0.015,-0.0053,-0.00316,-0.003048],
+   "conic_constant": [0.05,-0.015,-0.0053,-0.00316,-0.003048]
+  },
+  {
+   "radius": -3.115,
+   "thickness": 0.021,
+   "ior": 1,
+   "semi_aperture": 1.233,
+   "aspheric_coefficients": [-0.043,-0.015,-0.012,0.003559,-0.002045],
+   "conic_constant": [-0.043,-0.015,-0.012,0.003559,-0.002045]
+  },
+  {
+   "radius": -2.252,
+   "thickness": 0.445,
+   "ior": 1.7847,
+   "semi_aperture": 1.219,
+   "aspheric_coefficients": [],
+   "conic_constant": []
+  },
+  {
+   "radius": -9.057,
+   "thickness": 0.512,
+   "ior": 1,
+   "semi_aperture": 1.346,
+   "aspheric_coefficients": [],
+   "conic_constant": []
+  },
+  {
+   "radius": 0,
+   "thickness": 0.512,
+   "ior": 1,
+   "semi_aperture": 1.346,
+   "aspheric_coefficients": [],
+   "conic_constant": []
+  },
+  {
+   "radius": -4.306,
+   "thickness": 1.378,
+   "ior": 1.531,
+   "semi_aperture": 1.409,
+   "aspheric_coefficients": [0.093,-0.033,-0.001072,-0.003462,-0.0004413],
+   "conic_constant": [0.093,-0.033,-0.001072,-0.003462,-0.0004413]
+  },
+  {
+   "radius": -2.443,
+   "thickness": 0.9379999999999999,
+   "ior": 1,
+   "semi_aperture": 1.823,
+   "aspheric_coefficients": [-0.06,0.009480000000000001,-0.002006,-0.0009711,-0.0001576,0.001665],
+   "conic_constant": [-0.06,0.009480000000000001,-0.002006,-0.0009711,-0.0001576,0.001665]
+  },
+  {
+   "radius": -2.31,
+   "thickness": 0.354,
+   "ior": 1.531,
+   "semi_aperture": 2.167,
+   "aspheric_coefficients": [-0.101,-0.00628,0.001653,-0.001796,0.0003519,4.051e-05,9.441e-06],
+   "conic_constant": [-0.101,-0.00628,0.001653,-0.001796,0.0003519,4.051e-05,9.441e-06]
+  },
+  {
+   "radius": -5.332,
+   "thickness": 0.3,
+   "ior": 1,
+   "semi_aperture": 3.174,
+   "aspheric_coefficients": [0.196,-0.012,0.00103,3.686e-07,-1.956e-06,-4.296e-07,5.719e-08,-3.874e-10],
+   "conic_constant": [0.196,-0.012,0.00103,3.686e-07,-1.956e-06,-4.296e-07,5.719e-08,-3.874e-10]
+  },
+  {
+   "radius": -6,
+   "thickness": 0.313,
+   "ior": 1.516,
+   "semi_aperture": 3.222,
+   "aspheric_coefficients": [],
+   "conic_constant": []
+  },
+  {
+   "radius": -6,
+   "thickness": 0,
+   "ior": 1,
+   "semi_aperture": 3.344,
+   "aspheric_coefficients": [],
+   "conic_constant": []
+  }
+ ]
+}
