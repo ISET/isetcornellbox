@@ -1,0 +1,61 @@
+{
+ "name": "Dogmar.first",
+ "description": " Description: ashperical lens ZLY",
+ "type": "multi element lens",
+ "surfaces": [
+  {
+   "radius": 16.303,
+   "thickness": 2.376,
+   "ior": 1.6204,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -85.456,
+   "thickness": 1.474,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -31.521,
+   "thickness": 0.8,
+   "ior": 1.56444,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 25.873,
+   "thickness": 1.3,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 0,
+   "thickness": 1.3,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": -46.33,
+   "thickness": 0.8,
+   "ior": 1.56444,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 19.98,
+   "thickness": 1.474,
+   "ior": 1,
+   "semi_aperture": 8
+  },
+  {
+   "radius": 34.819,
+   "thickness": 2.145,
+   "ior": 1.6204,
+   "semi_aperture": 7
+  },
+  {
+   "radius": -19.795,
+   "thickness": 0,
+   "ior": 1,
+   "semi_aperture": 7
+  }
+ ]
+}

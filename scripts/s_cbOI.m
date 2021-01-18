@@ -10,15 +10,16 @@ thisR = cbBoxCreate;
 
 %% Adjust the position of the camera
 % The origin is in the bottom center of the box, the depth of the box is 
-% 30 cm, the camera is 10 cm from the front edge. The position of the 
-% camera should be set to 10 + 15 = 25 cm from the origin
+% 30 cm, the camera is 25 cm from the front edge. The position of the 
+% camera should be set to 25 + 15 = 40 cm from the origin
 from = thisR.get('from');
-newFrom = [-0.01 0.10 -0.35];% This is the place where we can see more
+newFrom = [0 0.125 -0.40];% This is the place where we can see more
 thisR.set('from', newFrom);
 newTo = newFrom + [0 0 1]; % The camera is horizontal
 thisR.set('to', newTo);
 
 %% Set position and rotation of cubes
+%{
 assetName = 'CubeLarge_B';
 thisR.set('asset', assetName, 'world translate', [-0.005 0 -0.03]);
 thisR.set('asset', 'CubeLarge_O', 'world rotate', [0 -20 0]);
@@ -26,19 +27,22 @@ thisR.set('asset', 'CubeLarge_O', 'world rotate', [0 -20 0]);
 assetName = 'CubeSmall_O';
 T1 = thisR.set('asset', assetName, 'world translate', [0.006 0 -0.01]);
 thisR.set('assets', 'CubeSmall_O', 'world rotate', [0 15 0]);
+%}
 
 %% Add bunny
+%{
 assetTreeName = 'bunny';
-rootST = thisR.set('asset', T1.name, 'graft with materials', assetTreeName);
-thisR.set('asset', rootST.name, 'world translate', [0.008 0.025+0.005 0]);
+rootST = thisR.set('asset', 'CubeSmall_B', 'graft with materials', assetTreeName);
+thisR.set('asset', rootST.name, 'world translate', [0.01 0.025+0.01 0]);
 thisR.set('asset', 'Bunny_O', 'scale', 1.3);
-thisR.set('asset', rootST.name, 'world rotate', [0 85 0])
+thisR.set('asset', rootST.name, 'world rotate', [0 -15 0])
 bunnyMatName = thisR.get('assets', rootST.name, 'material name');
 wave = 400:10:700;
 refl = ieReadSpectra('cboxSurfaces', wave);
 wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 % thisR.assets.show
+%}
 
 %% Add Slanted bar
 %{
@@ -51,7 +55,7 @@ T1 = thisR.set('asset', rootST3.name, 'world translate', [0 0 0.1]);
 assetTreeName = 'mccCB';
 rootST4 = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
 thisR.set('asset', rootST4.name, 'world rotate', [0 0 2]);
-T2 = thisR.set('asset', rootST4.name, 'world translate', [0.01 0.002 0.1]);
+T2 = thisR.set('asset', rootST4.name, 'world translate', [0.012 0.002 0.125]);
 
 % thisR.assets.show
 %% In the case of using pinhole
@@ -74,20 +78,22 @@ sceneSet(scene, 'gamma', 0.5);
 %% In the case of using lens
 % {
 %% Specify new rendering setting
-thisR.set('film resolution',[2048 2048]);
-nRaysPerPixel = 2048;
+thisR.set('film resolution',[320 320]);
+nRaysPerPixel = 128;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
 %% Build a lens
 % lensfile = 'reversed.telephoto.77deg.3.5201mm.json';
-lensfile  = 'dgauss.77deg.3.5201mm.json';  
+% lensfile  = 'dgauss.90deg.4.38mm.json'; 
+lensfile = 'wide.77deg.4.38mm.json';
 %{
 lens
 %}
 fprintf('Using lens: %s\n',lensfile);
 thisR.camera = piCameraCreate('omni','lensFile',lensfile);
-thisR.set('aperture diameter', 2.5);
-thisR.set('film diagonal',5.6); % mm
+thisR.set('aperture diameter', 2.5318);
+thisR.set('focus distance', 0.5);
+thisR.set('film diagonal', 7.04); % mm
 %% Write and render
 piWrite(thisR);
 % Render 

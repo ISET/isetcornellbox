@@ -1,0 +1,70 @@
+{
+ "name": "Dogmar.first",
+ "description": " Description: ashperical lens ZLY",
+ "type": "multi element lens",
+ "surfaces": [
+  {
+   "radius": 1.40534,
+   "thickness": 0.20481,
+   "ior": 1.6204,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": -7.36639,
+   "thickness": 0.12706,
+   "ior": 1,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": -2.71714,
+   "thickness": 0.06895999999999999,
+   "ior": 1.56444,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": 2.23028,
+   "thickness": 0.11206,
+   "ior": 1,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": 0,
+   "thickness": 0.11206,
+   "ior": 1,
+   "semi_aperture": 0.75,
+   "conic_constant": []
+  },
+  {
+   "radius": -3.99369,
+   "thickness": 0.06895999999999999,
+   "ior": 1.56444,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": 1.7223,
+   "thickness": 0.12706,
+   "ior": 1,
+   "semi_aperture": 0.6896099999999999,
+   "conic_constant": []
+  },
+  {
+   "radius": 3.00143,
+   "thickness": 0.1849,
+   "ior": 1.6204,
+   "semi_aperture": 0.603405,
+   "conic_constant": []
+  },
+  {
+   "radius": -1.70635,
+   "thickness": 0,
+   "ior": 1,
+   "semi_aperture": 0.603405,
+   "conic_constant": []
+  }
+ ]
+}

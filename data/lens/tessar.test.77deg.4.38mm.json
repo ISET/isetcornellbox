@@ -1,0 +1,63 @@
+{
+ "name": "tessar.test",
+ "description": " Description: Tessar lens ZLY",
+ "type": "multi element lens",
+ "surfaces": [
+  {
+   "radius": 1.46691,
+   "thickness": 0.22266,
+   "ior": 1.65844,
+   "semi_aperture": 0.748425,
+   "conic_constant": []
+  },
+  {
+   "radius": -83.37350000000001,
+   "thickness": 0.24043,
+   "ior": 1,
+   "semi_aperture": 0.748425,
+   "conic_constant": []
+  },
+  {
+   "radius": -3.19016,
+   "thickness": 0.07484,
+   "ior": 1.625,
+   "semi_aperture": 0.748425,
+   "conic_constant": []
+  },
+  {
+   "radius": 1.38833,
+   "thickness": 0.40602,
+   "ior": 1,
+   "semi_aperture": 0.748425,
+   "conic_constant": []
+  },
+  {
+   "radius": 0,
+   "thickness": 0.40602,
+   "ior": 1,
+   "semi_aperture": 0.75,
+   "conic_constant": []
+  },
+  {
+   "radius": -11.33582,
+   "thickness": 0.07484,
+   "ior": 1.5481,
+   "semi_aperture": 0.748425,
+   "conic_constant": []
+  },
+  {
+   "radius": 1.77376,
+   "thickness": 0.24511,
+   "ior": 1.65844,
+   "semi_aperture": 0.65487,
+   "conic_constant": []
+  },
+  {
+   "radius": -2.02542,
+   "thickness": 0,
+   "ior": 1,
+   "semi_aperture": 0.65487,
+   "conic_constant": []
+  }
+ ]
+}

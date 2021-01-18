@@ -81,29 +81,45 @@ sensorCWFS = sensorCWFR;
 sensorDayS = sensorDayR;
 
 %%% Illuminant A %%%
-cpAS =[63 385; 546 382; 546 59; 62 60];
+% cpAS = chartCornerpoints(sensorAS);
+% cpAS =[63 385; 546 382; 546 59; 62 60];
+cpAS = [75 374; 532 374; 537 69; 74 67];
 [sensorAS, rgbMeanAS, rectAS] = cbMccSensorSim(oiA, sensorAS, cpAS);
 %{
 sensorWindow(sensorAS);
-chartRectsDraw(sensorAS,rectsAS);  % Visualize the rectangles
+chartRectsDraw(sensorAS,rectAS);  % Visualize the rectangles
 %}
 %%% Illuminant CWF %%%
-cpCWFS = [62 403; 546 404; 549 73; 62 77];
+% cpCWFS = chartCornerpoints(sensorCWFS);
+% cpCWFS = [62 403; 546 404; 549 73; 62 77];
+cpCWFS = [69 397; 536 401; 538 83; 66 80];
 [sensorCWFS, rgbMeanCWFS, rectCWFS] = cbMccSensorSim(oiCWF, sensorCWFS, cpCWFS);
 %{
 sensorWindow(sensorCWFS);
-chartRectsDraw(sensorCWFS,rectsCWFS);  % Visualize the rectangles
+chartRectsDraw(sensorCWFS,rectCWFS);  % Visualize the rectangles
 %}
 %%% Illuminant Day %%%
-cpDayS = [62 403; 546 404; 549 73; 62 77];
+% cpDayS = [62 403; 546 404; 549 73; 62 77];
+cpDayS = [69 397; 536 401; 538 83; 66 80];
 [sensorDayS, rgbMeanDayS, rectDayS] = cbMccSensorSim(oiDay, sensorDayS, cpDayS);
+%{
+sensorWindow(sensorCWFS);
+chartRectsDraw(sensorCWFS,rectCWFS);  % Visualize the rectangles
+%}
 % Concat simulated rgb values
 rgbMeanS = [rgbMeanAS; rgbMeanCWFS; rgbMeanDayS];
 %% Initial comparison
 %{
 ieNewGraphWin;
-plot(rgbMeanS, rgbMeanR, 'o');
-identityLine;
+hold all
+h1 = plot(rgbMeanS(:, 1), rgbMeanR(:, 1), 'ro');
+h2 = plot(rgbMeanS(:, 2), rgbMeanR(:, 2), 'go');
+h3 = plot(rgbMeanS(:, 3), rgbMeanR(:, 3), 'bo');
+identityLine; box on
+title('Simulated vs measured RGB values')
+xlabel('Simulation'); ylabel('Measurement');
+set(gca, 'FontSize', 20);
+axis square
 %}
 %% First effort
 L = cbMccFit(rgbMeanS, rgbMeanR);
@@ -130,21 +146,32 @@ sensorPlot(sensorT, 'color filters');
 %}
 % cbMccPredEval('measurement', rgbMeanR, 'prediction', predDiag);
 %% Constrained lsq equation
+
 consL = cbMccFit(rgbMeanS, rgbMeanR, 'method', 'nonnegative');
 predCons = rgbMeanS * consL;
 % Plot the predicted color filter
 sensorT = sensorAS;
 cfS = sensorGet(sensorT, 'color filters');
 cfPredCons = cfS * consL;
+
 %{
 sensorT = sensorSet(sensorT, 'color filters', cfPredCons);
 sensorPlot(sensorT, 'color filters');
+% Save the new color filter
+savePath = fullfile(cboxRootPath, 'data', 'color', 'p4aCorrected.mat');
+ieSaveColorFilter(sensorT, savePath);
 %}
 % cbMccPredEval('measurement', rgbMeanR, 'prediction', predCons);
 %% Might delete in the future
 % {
 %% Compare sensor
+sensorT = sensorAS;
 sensorPred = sensorAS;
+
+sensorTA = sensorCompute(sensorT, oiA);
+sensorTCWF = sensorCompute(sensorT, oiCWF);
+sensorTDay = sensorCompute(sensorT, oiDay);
+
 sensorPred = sensorSet(sensorPred, 'color filters', cfPred);
 % sensorSPred = sensorSet(sensorSPred, 'noise flag', 2);
 sensorPredA = sensorCompute(sensorPred, oiA);
@@ -181,10 +208,16 @@ sensorWindow(sensorDayR);
 %% Compare ip
 ip = ipCreate;
 ip = ipSet(ip, 'render demosaic only', true);
+ip = ipSet(ip, 'scale display', 0);
 % Real img
 ipAR = ipCompute(ip, sensorAR);
 ipCWFR = ipCompute(ip, sensorCWFR);
 ipDayR = ipCompute(ip, sensorDayR);
+
+% Simulation - no correction
+ipAT = ipCompute(ip, sensorTA);
+ipCWFT = ipCompute(ip, sensorTCWF);
+ipDayT = ipCompute(ip, sensorTDay);
 
 % Simulation - all entry
 ipPredA = ipCompute(ip, sensorPredA);
@@ -196,14 +229,35 @@ ipPredADiag = ipCompute(ip, sensorPredADiag);
 ipPredCWFDiag = ipCompute(ip, sensorPredCWFDiag);
 ipPredDayDiag = ipCompute(ip, sensorPredDayDiag);
 
-% Simulation - diagonal
+% Simulation - constraint
 ipPredACons = ipCompute(ip, sensorPredACons);
 ipPredCWFCons = ipCompute(ip, sensorPredCWFCons);
 ipPredDayCons = ipCompute(ip, sensorPredDayCons);
 
 % Visualize
-ipWindow(ipAR); ipWindow(ipPredA); ipWindow(ipPredADiag); ipWindow(ipPredACons);
-ipWindow(ipCWFR); ipWindow(ipPredCWF); ipWindow(ipPredCWFDiag); ipWindow(ipPredCWFCons);
-ipWindow(ipDayR); ipWindow(ipPredDay); ipWindow(ipPredDayDiag); ipWindow(ipPredDayCons);
+ipWindow(ipAR);
+ipWindow(ipAT);
+ipWindow(ipPredACons);
+
+imgAR = ipGet(ipAR, 'results');
+imgAT = ipGet(ipAT, 'results');
+imgPredACons = ipGet(ipPredACons, 'results');
+ieNewGraphWin; imshow(imgAR.^0.4);
+ieNewGraphWin; imshow(imgAT.^0.4);
+ieNewGraphWin; imshow(imgPredACons.^0.4);
+
+imgCWFR = ipGet(ipCWFR, 'results');
+imgCWFT = ipGet(ipCWFT, 'results');
+imgPredCWFCons = ipGet(ipPredCWFCons, 'results');
+ieNewGraphWin; imshow(imgCWFR.^0.4);
+ieNewGraphWin; imshow(imgCWFT.^0.4);
+ieNewGraphWin; imshow(imgPredCWFCons.^0.4);
+
+imgDayR = ipGet(ipDayR, 'results');
+imgDayT = ipGet(ipDayT, 'results');
+imgPredDayCons = ipGet(ipPredDayCons, 'results');
+ieNewGraphWin; imshow(imgDayR.^0.4);
+ieNewGraphWin; imshow(imgDayT.^0.4);
+ieNewGraphWin; imshow(imgPredDayCons.^0.4);
 %}
 %% END
