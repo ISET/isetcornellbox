@@ -36,16 +36,18 @@ thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 % thisR.assets.show
 
 %% Specify rendering settings
-thisR.set('film resolution',[2048 2048]);
+thisR.set('film resolution',[4032 3024]);
 nRaysPerPixel = 2048;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
+thisR.set('fov', 50);
+thisR.set('film diagonal', 7.056);
 % {
 % Write and render
 piWrite(thisR);
 % Render
 [scene, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
-sceneName = 'CBLens_MCC_Bunny_HQ_scene';
+sceneName = 'CBLens_MCC_Bunny_HQ_scene_correct';
 scene = sceneSet(scene, 'name', sceneName);
 sceneWindow(scene);
 sceneSet(scene, 'gamma', 0.5);
