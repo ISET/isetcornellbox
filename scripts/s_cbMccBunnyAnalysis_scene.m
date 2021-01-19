@@ -3,11 +3,24 @@
 ieInit;
 if ~piDockerExists, piDockerConfig; end
 
-%%
-load('CBLens_MCC_Bunny_HQ_scene.mat', 'scene');
+%% PART I: Load real image
+%% Load real image
+dngName = 'IMG_20210105_162204.dng';
+[sensorR, infoR, ipR] = cbDNGRead(dngName, 'demosaic', true);
+sensorR = sensorSet(sensorR, 'name', 'Lighting-real');
 
+%{
+sensorWindow(sensorR);
+ipWindow(ipR);
+%}
+
+%%
+load('CBLens_MCC_Bunny_HQ_scene_correct.mat', 'scene');
+
+scene = sceneSet(scene, 'fov', 77);
 scene = sceneSet(scene, 'distance', 0.5);
-sceneSz = sceneGet(scene, 'size');
+illu = sceneGet(scene, 'mean luminance');
+scene = sceneSet(scene, 'mean luminance', illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08);
 pSize = 1.4e-6;
 %%
 oi = oiCreate;
@@ -18,47 +31,42 @@ oi = oiSet(oi, 'optics focal length', 0.00438);
 %%
 scene = sceneAdjustPixelSize(scene, oi, pSize);
 oi = oiCompute(oi, scene);
-% rect = [263, 263, sceneSz(1), sceneSz(2)];
-rect = [41, 41, sceneSz(1), sceneSz(2)];
-oi = oiCrop(oi, rect);
-%% Load lens vignetting map
-fName = 'p4aLensVignette.mat';
-load(fName, 'corrMapBNormUpSamp', 'corrMapBNorm');
-
-% Get oi size
-oiSz = oiGet(oi, 'size');
-% Resize
-corrMapBNormRS = imresize(corrMapBNorm, oiSz);
-corrMapBNormRSMap = repmat(corrMapBNormRS, [1, 1, 31]);
-
-tmp = oi.data.photons;
-scaledData = oi.data.photons .* corrMapBNormRSMap;
-%{
-diff = tmp - scaledData;
-ieNewGraphWin; imagesc(diff(:,:,1));
-%}
-oi.data.photons = scaledData;
-
+rect = [506 379 4031 3023];
+oiCp = oiCrop(oi, rect);
+% oiWindow(oiCp)
 
 %%
-sensor = sensorCreate('IMX363');
-sensor = sensorSetSizeToFOV(sensor, [oiGet(oi, 'fov'), oiGet(oi, 'fov')], oi);
-sensor = sensorSet(sensor, 'noise flag', 0);
-sensor = sensorSet(sensor, 'exp time', 0.0141 * 3);
-wave = sensorGet(sensor, 'wave');
+fName = 'p4aLensVignette.mat';
+load(fName, 'corrMapBNormUpSamp', 'corrMapBNorm');
+oiCp.data.photons = oiCp.data.photons .* corrMapBNormUpSamp;
+%%
+sensorS = sensorR;
+sensorS = sensorSetSizeToFOV(sensorS, oiGet(oiCp, 'fov'), oiCp);
+sensorS = sensorSet(sensorS, 'noise flag', 2);
+sensorS = sensorSet(sensorS, 'prnu sigma', 1.894);
+sensorS = sensorSet(sensorS, 'dsnu sigma', 6.36e-4);
+% Load sensor QE
+wave = sensorGet(sensorS, 'wave');
 cf = ieReadSpectra('p4aCorrected.mat', wave);
-sensor = sensorSet(sensor, 'color filters', cf);
-sensor = sensorCompute(sensor, oi);
-%{
-% Resize
-corrMapBNormRS = imresize(corrMapBNorm, sensorGet(sensor, 'size'));
-corrMapBNormRSMap = repmat(corrMapBNormRS, [1, 1, 31]);
-sensor.data.volts = sensor.data.volts .* corrMapBNormRS;
-sensor.data.dv = sensor.data.dv .* corrMapBNormRS;
-%}
-% sensorWindow(sensor);
-ieAddObject(sensor);
-ip = ipCreate;
-ip = ipSet(ip, 'render demosaic only', true);
-ip = ipCompute(ip, sensor);
-ipWindow(ip);
+sensorS = sensorSet(sensorS, 'color filters', cf);
+
+sensorS = sensorSet(sensorS, 'exp time', 0.2);
+sensorS = sensorCompute(sensorS, oiCp);
+% sensorWindow(sensorS);
+ieAddObject(sensorS);
+ipS = ipCreate;
+ipS = ipSet(ipS, 'render demosaic only', true);
+ipS = ipCompute(ipS, sensorS);
+ipWindow(ipS);
+
+%%
+hLineS = 1924;
+sData = sensorPlot(sensorS, 'dv hline', [1 hLineS], 'two lines', true);
+ylabel('Digital value');
+
+hLineR = 1868;
+rData = sensorPlot(sensorR, 'dv hline', [1 hLineR], 'two lines', true);
+ylabel('Digital value');
+
+t = 'Complex scene';
+[p, estY] = cbPlotSensorData(sData, rData, t);
