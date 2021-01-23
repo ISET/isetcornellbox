@@ -12,12 +12,16 @@ pSize = 1.4e-6;
 %%
 oi = oiCreate;
 oi = oiSet(oi, 'off axis method', 'skip');
-oi = oiSet(oi, 'f number', 5);
+% Apply diffuser blur
+oi = oiSet(oi, 'diffuser method', 'blur');
+oi = oiSet(oi, 'diffuser blur', [100, 100], 'um');
+oi = oiSet(oi, 'f number', 1.73);
 oi = oiSet(oi, 'optics focal length', 0.00438);
 
 %%
 scene = sceneAdjustPixelSize(scene, oi, pSize);
 oi = oiCompute(oi, scene);
+
 rect = [506 379 4031 3023];
 oiCp = oiCrop(oi, rect);
 oiWindow(oiCp)
@@ -37,7 +41,7 @@ wave = sensorGet(sensor, 'wave');
 cf = ieReadSpectra('p4aCorrected.mat', wave);
 sensor = sensorSet(sensor, 'color filters', cf);
 
-sensor = sensorSet(sensor, 'exp time', 0.0141 * 4);
+sensor = sensorSet(sensor, 'exp time', 0.0141);
 sensor = sensorCompute(sensor, oiCp);
 % sensorWindow(sensor);
 ieAddObject(sensor);

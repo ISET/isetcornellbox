@@ -6,7 +6,7 @@
 if ~piDockerExists, piDockerConfig; end
 
 %% Create Cornell Box recipe
-thisR = cbBoxCreate;
+thisR = cbBoxCreate('surfacecolor', 'white');
 
 %% Adjust the position of the camera
 % The origin is in the bottom center of the box, the depth of the box is 
@@ -17,7 +17,9 @@ newFrom = [0 0.125 -0.40];% This is the place where we can see more
 thisR.set('from', newFrom);
 newTo = newFrom + [0 0 1]; % The camera is horizontal
 thisR.set('to', newTo);
-
+%% Remove cubes
+thisR.set('assets', 'CubeSmall_B', 'chop');
+thisR.set('assets', 'CubeLarge_B', 'chop');
 %% Set position and rotation of cubes
 %{
 assetName = 'CubeLarge_B';
@@ -52,10 +54,12 @@ T1 = thisR.set('asset', rootST3.name, 'world translate', [0 0 0.1]);
 % thisR.assets.show
 %}
 %% Add MCC
+%{
 assetTreeName = 'mccCB';
-rootST4 = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
+[~, rootST4] = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
 thisR.set('asset', rootST4.name, 'world rotate', [0 0 2]);
 T2 = thisR.set('asset', rootST4.name, 'world translate', [0.012 0.002 0.125]);
+%}
 
 % thisR.assets.show
 %% In the case of using pinhole
@@ -79,7 +83,7 @@ sceneSet(scene, 'gamma', 0.5);
 % {
 %% Specify new rendering setting
 thisR.set('film resolution',[320 320]);
-nRaysPerPixel = 128;
+nRaysPerPixel = 256;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5); 
 %% Build a lens
@@ -108,3 +112,19 @@ oiSet(oi, 'gamma', 0.5);
 oiSavePath = fullfile(cboxRootPath, 'local', strcat(oiName, '.mat'));
 save(oiSavePath, 'oi');
 %}
+% {
+sensorS = sensorRR;
+sensorS = sensorSet(sensorS, 'color filters', cf);
+sensorS = sensorSetSizeToFOV(sensorS, oiGet(oi, 'fov'), oi);
+sensorS = sensorSet(sensorS, 'exp time', 0.0141 * 2);
+sensorS = sensorCompute(sensorS, oi);
+ipS = ipCreate;
+ipS = ipSet(ipS, 'render demosaic only', true);
+ipS = ipCompute(ipS, sensorS);
+ipWindow(ipS);
+%}
+
+%%
+sensorData = sensorGet(sensorS, 'dv');
+sensorC = sensorData(1:2:end, 1:2:end);
+ieNewGraphWin; imagesc(sensorC * 2); colormap('gray')
