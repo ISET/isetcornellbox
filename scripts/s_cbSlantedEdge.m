@@ -45,7 +45,7 @@ fName = 'IMG_20210106_171803.dng';
 
 ipWindow(ip5);
 
-%%
+%% focus 30 cm 0.4s
 fName = 'IMG_20210106_171912.dng';
 [sensor6, info6, ip6] = cbDNGRead(fName, 'demosaic', true);
 
@@ -57,8 +57,26 @@ fName = 'IMG_20210105_183620.dng';
 
 ipWindow(ip7);
 
-%% focus in the front 0.2 exp
+%% focus in the front 0.2 exp (used)
 fName = 'IMG_20210106_171803.dng';
 [sensor9, info9, ip9] = cbDNGRead(fName, 'demosaic', true);
-
+ieAddObject(sensor9);
 ipWindow(ip9);
+[roiLocs,roi] = ieROISelect(ip9);
+
+roiInt = round(roi.Position);
+barImage = vcGetROIData(ip9,roiInt,'sensor space');
+c = roiInt(3)+1;
+r = roiInt(4)+1;
+barImage = reshape(barImage,r,c,3);
+% vcNewGraphWin; imagesc(barImage(:,:,1)); axis image; colormap(gray);
+
+% Run the ISO 12233 code.
+dx = sensorGet(sensor,'pixel width','mm');
+
+% ISO12233(barImage, deltaX, weight, plotOptions)
+mtfData = ISO12233(barImage, dx, [], 'luminance');
+
+
+
+
