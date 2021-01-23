@@ -44,27 +44,16 @@ fName = 'IMG_20210106_171803.dng';
 [sensor5, info5, ip5] = cbDNGRead(fName, 'demosaic', true);
 
 ipWindow(ip5);
-
-%% focus 30 cm 0.4s
-fName = 'IMG_20210106_171912.dng';
-[sensor6, info6, ip6] = cbDNGRead(fName, 'demosaic', true);
-
-ipWindow(ip6);
-
-%% focus in the front 1s exp
-fName = 'IMG_20210105_183620.dng';
-[sensor7, info7, ip7] = cbDNGRead(fName, 'demosaic', true);
-
-ipWindow(ip7);
-
 %% focus in the front 0.2 exp (used)
 fName = 'IMG_20210106_171803.dng';
 [sensor9, info9, ip9] = cbDNGRead(fName, 'demosaic', true);
 ieAddObject(sensor9);
 ipWindow(ip9);
+%{
 [roiLocs,roi] = ieROISelect(ip9);
-
 roiInt = round(roi.Position);
+%}
+roiInt = [1744 1691 155 247];
 barImage = vcGetROIData(ip9,roiInt,'sensor space');
 c = roiInt(3)+1;
 r = roiInt(4)+1;

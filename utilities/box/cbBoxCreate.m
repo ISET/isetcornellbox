@@ -22,11 +22,14 @@ thisR = piRecipeDefault('scene name', 'cornell box reference');
 %% Remove current existing lights
 piLightDelete(thisR, 'all');
 %% Turn the object to area light
+
 areaLight = piLightCreate('type', 'area');
 lightName = 'cbox-lights-1';
 areaLight = piLightSet(areaLight, [], 'lightspectrum', lightName);
 
 assetName = 'AreaLight_O';
+% Move area light above by 0.5 cm
+thisR.set('asset', assetName, 'world translate', [0 0.005 0]);
 thisR.set('asset', assetName, 'obj2light', areaLight);
 
 assetNameCube = 'CubeLarge_O';
