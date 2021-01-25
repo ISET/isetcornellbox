@@ -6,57 +6,39 @@ filePath = fullfile(cboxRootPath, 'local', '20210105', 'resolution_targets');
 % Focus back
 filePathB = fullfile(filePath, 'distance_1', 'focus_back_1',...
                             'IMG_20210105_181903.dng');
-[sensorB1, infoB1, ipB1] = cbDNGRead(filePathB, 'demosaic', true);
-ieAddObject(sensorB1);
-ipWindow(ipB1);
-% Focus front
-filePathF = fullfile(filePath, 'distance_1', 'focus_front_1',...
-                            'IMG_20210105_182112.dng');
-[sensorF1, infoF1, ipF1] = cbDNGRead(filePathF, 'demosaic', true);
-ieAddObject(sensorF1);
-sensorWindow(sensorF1);
-ipWindow(ipF1);
+[sensorR1, info1, ipR1] = cbDNGRead(filePathB, 'demosaic', true);
+ieAddObject(sensorR1);
+ipWindow(ipR1);
+%{
+[roiLocs,roi] = ieROISelect(ipR1);
+roiInt1 = round(roi.Position);
+%}
+roiInt1 = [1685 1892 84 96];
+barImage = vcGetROIData(ipR1,roiInt1,'sensor space');
+c = roiInt1(3)+1;
+r = roiInt1(4)+1;
+barImage = reshape(barImage,r,c,3);
+% vcNewGraphWin; imagesc(barImage(:,:,1)); axis image; colormap(gray);
 
-%% Distance 2
-%% Focus back2
-filePathB = fullfile(filePath, 'distance_2', 'focus_back_2',...
-                            'IMG_20210105_182348.dng');
-[sensorBack2, infoBack2, ipBack2] = cbDNGRead(filePathB, 'demosaic', true);
-ieAddObject(sensorBack2);
-ipWindow(ipBack2);
+% Run the ISO 12233 code.
+dx = sensorGet(sensorR1,'pixel width','mm');
 
-%% Distance 3
-% Focus front3
-filePathF3 = fullfile(filePath, 'distance_3', 'focus_front_3_3',...
-                            'IMG_20210105_183804.dng');
-[sensorB3, infoB3, ipB3] = cbDNGRead(filePathF3, 'demosaic', true);
-ieAddObject(sensorB3);
-sensorWindow(sensorB3);
-ipWindow(ipB3);
+% ISO12233(barImage, deltaX, weight, plotOptions)
+mtfData = ISO12233(barImage, dx, [], 'luminance');
 
-%%
-fName = 'IMG_20210106_171618.dng';
-[sensor4, info4, ip4] = cbDNGRead(fName, 'demosaic', true);
-
-ipWindow(ip4);
-%%
-fName = 'IMG_20210106_171803.dng';
-[sensor5, info5, ip5] = cbDNGRead(fName, 'demosaic', true);
-
-ipWindow(ip5);
 %% focus in the front 0.2 exp (used)
 fName = 'IMG_20210106_171803.dng';
-[sensor9, info9, ip9] = cbDNGRead(fName, 'demosaic', true);
-ieAddObject(sensor9);
-ipWindow(ip9);
+[sensorR2, infoR2, ipR2] = cbDNGRead(fName, 'demosaic', true);
+ieAddObject(sensorR2);
+ipWindow(ipR2);
 %{
 [roiLocs,roi] = ieROISelect(ip9);
-roiInt = round(roi.Position);
+roiInt2 = round(roi.Position);
 %}
-roiInt = [1744 1691 155 247];
-barImage = vcGetROIData(ip9,roiInt,'sensor space');
-c = roiInt(3)+1;
-r = roiInt(4)+1;
+roiInt2 = [1744 1691 155 247];
+barImage = vcGetROIData(ipR2,roiInt2,'sensor space');
+c = roiInt2(3)+1;
+r = roiInt2(4)+1;
 barImage = reshape(barImage,r,c,3);
 % vcNewGraphWin; imagesc(barImage(:,:,1)); axis image; colormap(gray);
 
