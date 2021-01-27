@@ -10,14 +10,33 @@ scene = sceneSet(scene, 'fov', 77);
 scene = sceneSet(scene, 'distance', 0.5);
 pSize = 1.4e-6;
 %%
-oi = oiCreate;
-oi = oiSet(oi, 'off axis method', 'skip');
+%{
 % Apply diffuser blur
+oi = oiCreate;
 oi = oiSet(oi, 'diffuser method', 'blur');
 oi = oiSet(oi, 'diffuser blur', [0.95e-6, 0.95e-6]);
 oi = oiSet(oi, 'f number', 1.73);
 oi = oiSet(oi, 'optics focal length', 0.00438);
+%}
+% {
+wvf0 = wvfCreate;
+% f-number
+fNumber = 1.73;
+fLength = 0.00438;
+wvf0 = wvfSet(wvf0,'focal length', fLength);    % Meters
+wvf0 = wvfSet(wvf0,'pupil diameter', fLength / fNumber * 1e3);     % Millimeters
+wvf0 = wvfSet(wvf0, 'umperdegree', 78.5285);
+% wvf0 = wvfSet(wvf0,'z pupil diameter', fLength / fNumber * 1e3);
+wvf0 = wvfSet(wvf0,'zcoeffs',1,'defocus');
+% We need to calculate the pointspread explicitly
+wvf0 = wvfComputePSF(wvf0);
 
+% Finally, we convert the wavefront representation to a shift-invariant
+% optical image with this routine.
+
+oi = wvf2oi(wvf0);
+%}
+oi = oiSet(oi, 'off axis method', 'skip');
 %%
 scene = sceneAdjustPixelSize(scene, oi, pSize);
 oi = oiCompute(oi, scene);
@@ -54,7 +73,7 @@ ipWindow(ip);
 [roiLocs,roi] = ieROISelect(ip);
 roiInt = round(roi.Position);
 %}
-roiInt = [2593 2512 50 57];
+roiInt = [1977 1819 111 141];
 barImage = vcGetROIData(ip,roiInt,'sensor space');
 c = roiInt(3)+1;
 r = roiInt(4)+1;
