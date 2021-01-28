@@ -42,14 +42,44 @@ sceneMS = sceneSet(scene, 'fov', 77);
 sceneMS = sceneSet(sceneMS, 'distance', 0.5);
 illu = sceneGet(sceneMS, 'mean luminance');
 sceneMS = sceneSet(sceneMS, 'mean luminance',...
-        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04);
+        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04 / 2 / 2.7 / 1.4);
 pSize = 1.4e-6;
 %%
+%{
 oiMS = oiCreate;
 oiMS = oiSet(oiMS, 'off axis method', 'skip');
 oiMS = oiSet(oiMS, 'f number', 5);
 oiMS = oiSet(oiMS, 'optics focal length', 0.00438);
+%}
+%%
+%{
+% Apply diffuser blur
+oi = oiCreate;
+oi = oiSet(oi, 'diffuser method', 'blur');
+oi = oiSet(oi, 'diffuser blur', [0.95e-6, 0.95e-6]);
+oi = oiSet(oi, 'f number', 1.73);
+oi = oiSet(oi, 'optics focal length', 0.00438);
+%}
+% {
+wvf1 = wvfCreate;
+% f-number
+fNumber = 1.73;
+fLength = 0.00438;
+wvf1 = wvfSet(wvf1,'focal length', fLength);    % Meters
+wvf1 = wvfSet(wvf1,'pupil diameter', fLength / fNumber * 1e3);     % Millimeters
+% wvf0 = wvfSet(wvf0, 'umperdegree', 78.5285);
+% wvf0 = wvfSet(wvf0,'z pupil diameter', fLength / fNumber * 1e3);
+wvf1 = wvfSet(wvf1,'zcoeffs', 1.225, 'defocus');
+% We need to calculate the pointspread explicitly
+wvf1 = wvfComputePSF(wvf1);
 
+% Finally, we convert the wavefront representation to a shift-invariant
+% optical image with this routine.
+
+oiMS = wvf2oi(wvf1);
+% oiPlot(oi, 'psf 550');
+%}
+oiMS = oiSet(oiMS, 'off axis method', 'skip');
 %%
 sceneMS = sceneAdjustPixelSize(sceneMS, oiMS, pSize);
 oiMS = oiCompute(oiMS, sceneMS);
@@ -78,6 +108,7 @@ sensorMS = sensorCompute(sensorMS, oiCpMS);
 rectMS = [1820, 1863, 2375 - 1820, 2252 - 1863];
 % sensorWindow(sensorMS);
 sensorMSCp = sensorCrop(sensorMS, rectMS);
+%{
 sensorWindow(sensorMSCp);
 
 ieAddObject(sensorMS);
@@ -85,12 +116,12 @@ ipMS = ipCreate;
 ipMS = ipSet(ipMS, 'render demosaic only', true);
 ipMS = ipCompute(ipMS, sensorMS);
 ipWindow(ipMS);
-
+%}
 %% Scale and align
 % Crop image
 rectMR = [1808 1793 2321 - 1808 2207 - 1793];
 sensorMRCp = sensorCrop(sensorMR, rectMR);
-sensorWindow(sensorMRCp);
+% sensorWindow(sensorMRCp);
 
 hLineMS = 311;
 msData = sensorPlot(sensorMSCp, 'dv hline', [1 hLineMS], 'two lines', true);
@@ -100,8 +131,14 @@ mrData = sensorPlot(sensorMRCp, 'dv hline', [1, hLineMR],'two lines',true);
 ylabel('Digital value');
 
 t = 'Middle';
-cbPlotSensorData(msData, mrData, t);
-
+pattern1 = [2, 3, 1, 2];
+pattern2 = [2, 3, 1, 2];
+cbPlotSensorData(msData, mrData, t, pattern1, pattern2);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [5 1 7 3 6 2 8 4];
+legend(plots(neworder), labels(neworder))
+% set(gca,'Children',[h(1), h(5), h(3), h(7), h(2), h(6), h(4), h(8)])
 
 
 %% Left
@@ -111,14 +148,10 @@ sceneLS = sceneSet(scene, 'fov', 77);
 sceneLS = sceneSet(sceneLS, 'distance', 0.5);
 illu = sceneGet(sceneLS, 'mean luminance');
 sceneLS = sceneSet(sceneLS, 'mean luminance',...
-        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04 / 1.16);
+        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04 / 1.16 / 4.48 / 1.4 / 1.2 / 1.15);
 pSize = 1.4e-6;
 %%
-oiLS = oiCreate;
-oiLS = oiSet(oiLS, 'off axis method', 'skip');
-oiLS = oiSet(oiLS, 'f number', 5);
-oiLS = oiSet(oiLS, 'optics focal length', 0.00438);
-
+oiLS = oiMS;
 %%
 sceneLS = sceneAdjustPixelSize(sceneLS, oiLS, pSize);
 oiLS = oiCompute(oiLS, sceneLS);
@@ -150,6 +183,7 @@ sensorLS = sensorCompute(sensorLS, oiCpLS);
 rectLS = [1086 1859 588 414];
 % sensorWindow(sensorMS);
 sensorLSCp = sensorCrop(sensorLS, rectLS);
+%{
 sensorWindow(sensorLSCp);
 
 ieAddObject(sensorLS);
@@ -157,29 +191,31 @@ ipLS = ipCreate;
 ipLS = ipSet(ipLS, 'render demosaic only', true);
 ipLS = ipCompute(ipLS, sensorLS);
 ipWindow(ipLS);
-
+%}
 %%
 hLineLS = 325;
 lsData = sensorPlot(sensorLSCp, 'dv hline', [1 hLineLS], 'two lines', true);
 ylabel('Digital value');
 
-sensorWindow(sensorLR);
+% sensorWindow(sensorLR);
 % [roiLocs,roi] = ieROISelect(sensorLR);
 % rectLR = round(roi.Position);
 rectLR = [1045 1783 582 418];
 % Crop image
 sensorLRCp = sensorCrop(sensorLR, rectLR);
-sensorWindow(sensorLRCp);
+% sensorWindow(sensorLRCp);
 hLineLR = 327;
 lrData = sensorPlot(sensorLRCp, 'dv hline', [1 hLineLR], 'two lines', true);
 ylabel('Digital value');
 
 t = 'Left';
-cbPlotSensorData(lrData, lsData, t);
-
-
-
-
+pattern1 = [2, 3, 1, 2];
+pattern2 = [2, 3, 1, 2];
+cbPlotSensorData(lrData, lsData, t, pattern1, pattern2);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [5 1 7 3 6 2 8 4];
+legend(plots(neworder), labels(neworder))
 %% Right
 load('CBLens_MCC_right_HQ_scene_correct.mat', 'scene');
 
@@ -187,13 +223,10 @@ sceneRS = sceneSet(scene, 'fov', 77);
 sceneRS = sceneSet(sceneRS, 'distance', 0.5);
 illu = sceneGet(sceneRS, 'mean luminance');
 sceneRS = sceneSet(sceneRS, 'mean luminance',...
-        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04);
+        illu / 3.476 / 1.0694 * 3.3061 * 1.4252 * 1.08 * 1.14 * 1.04 / 8.83 / 0.8705 / 1.03);
 pSize = 1.4e-6;
 %%
-oiRS = oiCreate;
-oiRS = oiSet(oiRS, 'off axis method', 'skip');
-oiRS = oiSet(oiRS, 'f number', 5);
-oiRS = oiSet(oiRS, 'optics focal length', 0.00438);
+oiRS = oiMS;
 
 %%
 sceneRS = sceneAdjustPixelSize(sceneRS, oiRS, pSize);
@@ -216,20 +249,21 @@ sensorRS = sensorSet(sensorRS, 'color filters', cf);
 
 sensorRS = sensorSet(sensorRS, 'exp time', 0.2);
 sensorRS = sensorCompute(sensorRS, oiCpRS);
+%{
 % sensorWindow(sensorRS);
 ieAddObject(sensorRS);
 ipRS = ipCreate;
 ipRS = ipSet(ipRS, 'render demosaic only', true);
 ipRS = ipCompute(ipRS, sensorRS);
 ipWindow(ipRS);
-
+%}
 %%
 % [roiLocs,roi] = ieROISelect(sensorRS);
 % rectRS = round(roi.Position);
 rectRS = [2369 1851 596 389];
 % sensorWindow(sensorRS);
 sensorRSCp = sensorCrop(sensorRS, rectRS);
-sensorWindow(sensorRSCp);
+% sensorWindow(sensorRSCp);
 
 hLineRS = 325;
 rsData = sensorPlot(sensorRSCp, 'dv hline', [1 hLineRS], 'two lines', true);
@@ -242,11 +276,17 @@ rectRR = [2342 1793 618 412];
 % sensorWindow(sensorRS);
 sensorRRCp = sensorCrop(sensorRR, rectRR);
 
-sensorWindow(sensorRRCp);
+% sensorWindow(sensorRRCp);
 
 hLineRR = 314;
 rrData = sensorPlot(sensorRRCp, 'dv hline', [1 hLineRR], 'two lines', true);
 ylabel('Digital value');
 
 t = 'Right';
-cbPlotSensorData(rsData, rrData, t);
+pattern1 = [2, 3, 1, 2];
+pattern2 = [1, 2, 2, 3];
+cbPlotSensorData(rsData, rrData, t, pattern1, pattern2);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [5 1 7 3 2 6 4 8];
+legend(plots(neworder), labels(neworder))

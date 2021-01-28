@@ -1,8 +1,8 @@
-function [pM, estYM] = cbPlotSensorData(sData, rData, t)
+function [pM, estYM] = cbPlotSensorData(sData, rData, t, pattern1, pattern2)
 % colors = {'g', 'r', 'b'};
-colors = {'r', 'g', 'g', 'b'};
+colors1 = {'r', 'g', 'b'};
 lStyleS = '-';
-colorr = {[0.8500, 0.3250, 0.0980], [0.4660, 0.6740, 0.1880], [0.4660, 0.6740, 0.1880], [0, 0.4470, 0.7410]};
+colors2 = {[0.8500, 0.3250, 0.0980], [0.4660, 0.6740, 0.1880], [0, 0.4470, 0.7410]};
 lStyleR = 'o';
 ieNewGraphWin;
 hold all
@@ -13,8 +13,8 @@ D2.x = rData.pixPos{ii};
 D2.y = rData.pixData{ii};
 
 [pM, estYM] = ieLineAlign(D1, D2);
-plot(D1.x,D1.y, 'Color', colors{ii}, 'LineStyle', lStyleS);
-plot(pM(1)*(D2.x - pM(2)), D2.y, 'Color', colorr{ii}, 'Marker', lStyleR, 'LineStyle', 'None');
+plot(D1.x,D1.y, 'Color', colors1{pattern1(ii)}, 'LineStyle', lStyleS);
+plot(pM(1)*(D2.x - pM(2)), D2.y, 'Color', colors2{pattern2(ii)}, 'Marker', lStyleR, 'LineStyle', 'None');
 ylabel('Digital value');
 end
 grid on; box on;
