@@ -9,11 +9,18 @@ dngName = 'IMG_20210105_162204.dng';
 [sensorR, infoR, ipR] = cbDNGRead(dngName, 'demosaic', true);
 sensorR = sensorSet(sensorR, 'name', 'Lighting-real');
 
+%% Select a region (real image)
 %{
 sensorWindow(sensorR);
-ipWindow(ipR);
+[~, roiR] = ieROISelect(sensorR);
+roiRInt = round(roiR.Position);
 %}
-
+roiRInt = [678 1224 272 272];
+sensorR = sensorSet(sensorR, 'roi', roiRInt);
+sensorStats(sensorR, 'basic', 'dv');
+%%
+ipWindow(ipR);
+%% PART II: 
 %%
 load('CBLens_MCC_Bunny_HQ_scene_correct.mat', 'scene');
 
@@ -102,8 +109,12 @@ neworder = [5 1 7 3 6 2 8 4];
 legend(plots(neworder), labels(neworder))
 %}
 
-%%
+%% Select a region (simulation)
+%{
 sensorWindow(sensorS);
-[~,roiS] = ieROISelect(sensorS);
+[~, roiS] = ieROISelect(sensorS);
 roiSInt = round(roiS.Position);
-sensorS = sensorSet(sensorS,'roi',roiSInt);
+%}
+roiSInt = [678 1224 272 272];
+sensorS = sensorSet(sensorS, 'roi', roiSInt);
+sensorStats(sensorS, 'basic', 'dv');
