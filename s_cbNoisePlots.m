@@ -62,6 +62,7 @@ histogram(sdSimulated(:) - sdMeasured(:))
 
 %%  Measured noise at Google estimates
 
+% TO CHECK:  Are these numbers the same ones as Zheng has!!!
 sdSimulated = [10.3, 5.45, 2.31;
     16.2, 20.8, 7.77;
     3.86, 7.95, 2.75];
