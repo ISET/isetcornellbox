@@ -18,6 +18,9 @@ roiRInt = round(roiR.Position);
 roiRInt = [678 1224 272 272];
 sensorR = sensorSet(sensorR, 'roi', roiRInt);
 sensorStats(sensorR, 'basic', 'dv');
+%{
+sensorWindow(sensorR);
+%}
 %%
 ipWindow(ipR);
 %% PART II: 
@@ -71,9 +74,9 @@ oiCp.data.photons = oiCp.data.photons .* corrMapBNormUpSamp;
 %%
 sensorS = sensorR;
 sensorS = sensorSetSizeToFOV(sensorS, oiGet(oiCp, 'fov'), oiCp);
-sensorS = sensorSet(sensorS, 'noise flag', 2);
-sensorS = sensorSet(sensorS, 'prnu sigma', 1.894);
-sensorS = sensorSet(sensorS, 'dsnu sigma', 6.36e-4);
+% sensorS = sensorSet(sensorS, 'noise flag', 2);
+% sensorS = sensorSet(sensorS, 'prnu sigma', 1.894);
+% sensorS = sensorSet(sensorS, 'dsnu sigma', 6.36e-4);
 % Load sensor QE
 wave = sensorGet(sensorS, 'wave');
 cf = ieReadSpectra('p4aCorrected.mat', wave);
@@ -115,6 +118,44 @@ sensorWindow(sensorS);
 [~, roiS] = ieROISelect(sensorS);
 roiSInt = round(roiS.Position);
 %}
-roiSInt = [678 1224 272 272];
-sensorS = sensorSet(sensorS, 'roi', roiSInt);
+% Left
+roiSIntL = [678 1224 100 100];
+sensorS = sensorSet(sensorS, 'roi', roiSIntL);
 sensorStats(sensorS, 'basic', 'dv');
+title('Simulated-left')
+
+% Back
+roiSIntB = [1988 1611 100 100];
+sensorS = sensorSet(sensorS, 'roi', roiSIntB);
+sensorStats(sensorS, 'basic', 'dv');
+title('Simulated-back')
+
+% Right
+roiSIntR = [3246 1304 100 100];
+sensorS = sensorSet(sensorS, 'roi', roiSIntR);
+sensorStats(sensorS, 'basic', 'dv');
+title('Simulated-right')
+
+%% Select a region (real)
+%{
+sensorWindow(sensorR);
+[~, roiR] = ieROISelect(sensorR);
+roiRInt = round(roiR.Position);
+%}
+% Left
+roiRIntR = [710 1117 100 100];
+sensorR = sensorSet(sensorR, 'roi', roiRIntR);
+sensorStats(sensorR, 'basic', 'dv');
+title('Measured-left')
+
+% Back
+roiRIntB = [1988 1681 100 100];
+sensorR = sensorSet(sensorR, 'roi', roiRIntB);
+sensorStats(sensorR, 'basic', 'dv');
+title('Measured-back')
+
+% Right
+roiRIntR = [3246 1304 100 100];
+sensorR = sensorSet(sensorR, 'roi', roiRIntR);
+sensorStats(sensorR, 'basic', 'dv');
+title('Measured-right')

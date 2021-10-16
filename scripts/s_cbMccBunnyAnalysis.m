@@ -25,7 +25,7 @@ sensorS = sensorSet(sensorS, 'name', 'MCC-Bunny');
 
 % Compute ip
 ipS = ipCreate;
-ipS = ipSet(ipS, 'render demosaic only', true);
+% ipS = ipSet(ipS, 'render demosaic only', true);
 ipS = ipCompute(ipS, sensorS);
 
 %%

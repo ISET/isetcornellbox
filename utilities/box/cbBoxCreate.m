@@ -23,16 +23,16 @@ thisR = piRecipeDefault('scene name', 'cornell box reference');
 piLightDelete(thisR, 'all');
 %% Turn the object to area light
 
-areaLight = piLightCreate('type', 'area');
+areaLight = piLightCreate('lamp', 'type', 'area');
 lightName = 'cbox-lights-1';
-areaLight = piLightSet(areaLight, [], 'lightspectrum', lightName);
+areaLight = piLightSet(areaLight, 'spd val', lightName);
 
-assetName = 'AreaLight_O';
+assetName = '001_AreaLight_O';
 % Move area light above by 0.5 cm
-thisR.set('asset', assetName, 'world translate', [0 0.005 0]);
+% thisR.set('asset', assetName, 'world translate', [0 0.005 0]);
 thisR.set('asset', assetName, 'obj2light', areaLight);
 
-assetNameCube = 'CubeLarge_O';
+assetNameCube = '001_CubeLarge_O';
 thisR.set('asset', assetNameCube, 'scale', [1 1.2 1]);
 %{
 wave = 400:10:700;
@@ -42,6 +42,17 @@ plot(wave, lgt);
 grid on; box on;
 xlabel('Wavelength (nm)'); ylabel('Radiance (Watt/sr/nm/m^2)')
 %}
+
+%% Adjust the position of the camera
+% The origin is in the bottom center of the box, the depth of the box is 
+% 30 cm, the camera is 25 cm from the front edge. The position of the 
+% camera should be set to 25 + 15 = 40 cm from the origin
+% from = thisR.get('from');
+newFrom = [0 0.115 -0.40];% This is the place where we can see more
+thisR.set('from', newFrom);
+newTo = newFrom + [0 0 1]; % The camera is horizontal
+thisR.set('to', newTo);
+
 %% Load spetral reflectance
 wave = 400:10:700;
 refl = ieReadSpectra('cboxSurfaces', wave);
@@ -61,13 +72,13 @@ set(gca, 'xlim', [400 700]); set(gca, 'ylim', [0 1]);
 legend('Red wall', 'Green wall', 'White wall')
 %}
 %% Load spectral reflectance
-piMaterialList(thisR);
-matList = {'LeftWall', 'RightWall', 'BackWall', 'TopWall',...
+thisR.get('material print');
+matList = {'ShieldMat', 'LeftWall', 'RightWall', 'BackWall', 'TopWall',...
             'BottomWall', 'CubeLarge', 'CubeSmall'};
 if isequal(surfaceColor, 'redgreen')
-    reflList = [rRefl gRefl wRefl wRefl wRefl wRefl wRefl];
+    reflList = [wRefl, rRefl gRefl wRefl wRefl wRefl wRefl wRefl];
 elseif isequal(surfaceColor, 'white')
-    reflList = [wRefl wRefl wRefl wRefl wRefl wRefl wRefl];
+    reflList = [wRefl, wRefl wRefl wRefl wRefl wRefl wRefl wRefl];
 end
 for ii=1:numel(matList)
     thisR = cbAssignMaterial(thisR, matList{ii}, reflList(:, ii));

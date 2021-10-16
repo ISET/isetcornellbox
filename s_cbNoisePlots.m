@@ -6,8 +6,8 @@
 
 %% Measured noise at Stanford
 
-mnSimulated = [234, 141, 84.6;
-    432, 552, 211;
+mnSimulated = [235, 141, 84.6;
+    432, 551, 213;
     120, 201, 97.1];
 
 mnMeasured = [234,139,80.7;

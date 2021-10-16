@@ -1,5 +1,7 @@
-%s_cornellBoxBaseRender
-% s_slantedEdge
+% s_cbBase
+% This is an example of how to build a cornell box recipe and add lens.
+% The core function is cbBoxCreate, which set up the box, area light on top
+% and two cubes.
 
 %% Initialize ISET and Docker
 ieInit;
@@ -18,6 +20,10 @@ thisR.set('from', newFrom);
 newTo = newFrom + [0 0 1]; % The camera is horizontal
 thisR.set('to', newTo);
 
+%{
+% Render the scene without lens
+piWRS(thisR);
+%}
 %% Add lens
 lensfile = 'wide.77deg.4.38mm.json'; % in 
 fprintf('Using lens: %s\n',lensfile);
@@ -45,7 +51,7 @@ oiWindow(oi);
 oiSet(oi, 'gamma', 0.5);
 %}
 % Save oi
-% {
+%{
 oiSavePath = fullfile(cboxRootPath, 'local', 'simulation', 'pipeline', strcat(oiName, '.mat'));
 save(oiSavePath, 'oi');
 %}
