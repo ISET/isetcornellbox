@@ -14,9 +14,12 @@ function thisR = cbBoxCreate(varargin)
 varargin = ieParamFormat(varargin);
 p = inputParser;
 p.addParameter('surfacecolor', 'redgreen', @ischar);
+p.addParameter('from', [0 0.105 -0.40], @isnumeric); % This is the place where we can see more
+p.addParameter('to', [0 0.105, 0.6], @isnumeric); % The camera is horizontal
 p.parse(varargin{:});
 surfaceColor = p.Results.surfacecolor;
-
+from = p.Results.from;
+to = p.Results.to;
 %% Read recipe
 thisR = piRecipeDefault('scene name', 'cornell box reference');
 %% Remove current existing lights
@@ -44,14 +47,18 @@ xlabel('Wavelength (nm)'); ylabel('Radiance (Watt/sr/nm/m^2)')
 %}
 
 %% Adjust the position of the camera
+%{
 % The origin is in the bottom center of the box, the depth of the box is 
 % 30 cm, the camera is 25 cm from the front edge. The position of the 
 % camera should be set to 25 + 15 = 40 cm from the origin
 % from = thisR.get('from');
-newFrom = [0 0.115 -0.40];% This is the place where we can see more
+newFrom = [0 0.115 -0.40];
 thisR.set('from', newFrom);
-newTo = newFrom + [0 0 1]; % The camera is horizontal
+newTo = newFrom + [0 0 1]; 
 thisR.set('to', newTo);
+%}
+thisR.set('from', from);
+thisR.set('to', to);
 
 %% Load spetral reflectance
 wave = 400:10:700;
