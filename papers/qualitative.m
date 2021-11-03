@@ -4,21 +4,130 @@
 ieInit;
 if ~piDockerExists, piDockerConfig; end
 
-
+%%
+tmp = load('p4aLensVignet.mat', 'pixel4aLensVignetSlope');
+vignetting = tmp.pixel4aLensVignetSlope;
 %% Basic parameter initialization
-from = [0 0.105 -0.40];
-to = [0 0.105, 0.6];
-resolution = [189 252];
-nRaysPerPixel = 128;
+
+resolution = [189 252] * 8;
+nRaysPerPixel = 4096;
 nBounces = 5;
+measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos');
 
-%%
-measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos', 'pos1');
-measPos1ImgPath = fullfile(measPos1Path, 'center', 'IMG_20210105_151748.dng');
+%% Center
 
-[prevImgSimPos1Ctr, prevImgMeasPos1Ctr, oiPos1Ctr, sensorSimPos1Ctr,...
-    sensorMeasPos1Ctr] = cbWholePipelineSim('from', from, )
-%%
+from = [0 0.115 -0.40];
+to = [0 0.115, 0.6];
+                                  
+measCenerImgPath = fullfile(measPos1Path, 'center', 'selected', 'IMG_20210130_111914.dng');
+[sensor, info] = sensorDNGRead(measCenerImgPath);
+
+label = 'Center';
+
+oiTmpCenter = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'label', label);
+oiWindow(oiTmpCenter); oiSet(oiTmpCenter, 'gamma', 0.5);
+
+[prevImgSimCtr, prevImgMeasCtr, sensorSimCtr,...
+    sensorMeasCtr, oiCtr, ipSimCtr, ipMeasCtr] = cbSensorSim(oiTmpCenter, 'meas img path', measCenerImgPath,...
+                                                'illuscale', 1.2,...
+                                                'noise flag', 2,...
+                                                'vignetting', vignetting);
+%{
+  sensorWindow(sensorSimCtr);
+  sensorWindow(sensorMeasCtr);
+%}
+% ipWindow(ipSimCtr); ipWindow(ipMeasCtr);                                            
+ieNewGraphWin; imshow(prevImgSimCtr);
+ieNewGraphWin; imshow(prevImgMeasCtr);
+
+qualSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'qualitative');
+noiseSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'noise');
+if ~exist(qualSaveDirPath, 'dir')
+    mkdir(qualSaveDirPath);
+end
+
+if ~exist(noiseSaveDirPath, 'dir')
+    mkdir(noiseSaveDirPath);
+end
+simCtrName = 'simCtr.png';
+measCtrName = 'measCtr.png';
+imwrite(prevImgSimCtr, fullfile(qualSaveDirPath, simCtrName));
+imwrite(prevImgMeasCtr, fullfile(qualSaveDirPath, measCtrName));
+
+oiCtrName = 'oiCtr.mat';
+sensorSimCtrName = 'sensorSimCtr.mat';
+sensorMeasCtrName = 'sensorMeasCtr.mat';
+save(fullfile(qualSaveDirPath, oiCtrName), 'oiTmpCenter');
+save(fullfile(noiseSaveDirPath, sensorSimCtrName), 'sensorSimCtr');
+save(fullfile(noiseSaveDirPath, sensorMeasCtrName), 'sensorMeasCtr');
+
+%% left
+from = [-0.10 0.115 -0.40];
+to = [0 0.115, 0.6];
+
+measLeftImgPath = fullfile(measPos1Path, 'left', 'selected', 'IMG_20210130_114111.dng');
+label = 'Left';
+
+oiTmpLeft = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'label', label);
+oiWindow(oiTmpLeft); oiSet(oiTmpLeft, 'gamma', 0.5);
+
+[prevImgSimLeft, prevImgMeasLeft, sensorSimLeft,...
+    sensorMeasLeft, oiLeft, ipSimLeft, ipMeasLeft] = cbSensorSim(oiTmpLeft, 'meas img path', measLeftImgPath,...
+                                                'illuscale', 1);
+ieNewGraphWin; imshow(prevImgSimLeft);
+ieNewGraphWin; imshow(prevImgMeasLeft);     
+
+qualSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'qualitative');
+if ~exist(qualSaveDirPath, 'dir')
+    mkdir(qualSaveDirPath);
+end
+simLeftName = 'simLeft.png';
+measLeftName = 'measLeft.png';
+imwrite(prevImgSimLeft, fullfile(qualSaveDirPath, simLeftName));
+imwrite(prevImgMeasLeft, fullfile(qualSaveDirPath, measLeftName));
+
+oiLeftName = 'oiLeft.mat';
+save(fullfile(qualSaveDirPath, oiLeftName), 'oiTmpLeft');
+
+%% Right
+from = [0.02 0.11 -0.40];
+to = [-0.1 0.115, 0.6];
+
+measRightImgPath = fullfile(measPos1Path, 'right', 'selected', 'IMG_20210130_113451.dng');
+label = 'Right';
+
+oiTmpRight = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'label', label);
+oiWindow(oiTmpRight); oiSet(oiTmpRight, 'gamma', 0.5);
+
+[prevImgSimRight, prevImgMeasRight, sensorSimRight,...
+    sensorMeasRight, oiRight, ipSimRight, ipMeasRight] = cbSensorSim(oiTmpRight, 'meas img path', measRightImgPath,...
+                                                'illuscale', 1);
+ieNewGraphWin; imshow(prevImgSimRight);
+ieNewGraphWin; imshow(prevImgMeasRight);     
+
+qualSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'qualitative');
+if ~exist(qualSaveDirPath, 'dir')
+    mkdir(qualSaveDirPath);
+end
+simRightName = 'simRight.png';
+measRightName = 'measRight.png';
+imwrite(prevImgSimRight, fullfile(qualSaveDirPath, simRightName));
+imwrite(prevImgMeasRight, fullfile(qualSaveDirPath, measRightName));
+
+oiRightName = 'oiRight.mat';
+save(fullfile(qualSaveDirPath, oiRightName), 'oiTmpRight');
 
 %%
 %{

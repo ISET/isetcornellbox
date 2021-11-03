@@ -33,10 +33,15 @@ if ~isequal(numel(wave), numel(refl))
 end
 
 %%
-% Create PBRT format of reflectance
-curReflSPD = piMaterialCreateSPD(wave, refl);
-newMat = piMaterialCreate(mat, 'type', 'matte', 'kd value', curReflSPD);
-thisR.set('material', mat, newMat);
+if isequal(mat, 'ShieldMat')
+    curReflSPD = piMaterialCreateSPD(wave, refl);
+    thisR.set('material', mat, 'kd value', curReflSPD);
+else
+    % Create PBRT format of reflectance
+    curReflSPD = piMaterialCreateSPD(wave, refl);
+    newMat = piMaterialCreate(mat, 'type', 'matte', 'kd value', curReflSPD);
+    thisR.set('material', mat, newMat);
+end
 
 % Print info
 fprintf('Assigned reflectance to: %s\n', mat);

@@ -1,15 +1,14 @@
-function [prevImgSim, prevImgMeas, oi, sensorSim, sensorMeas] = cbWholePipelineSim(varargin)
+function oi = cbOISim(varargin)
 % Simulate the whole pipeline
 %%
 varargin = ieParamFormat(varargin);
 p = inputParser;
-p.addParameter('from', [0 0.105 -0.40], @isnumeric); % This is the place where we can see more
-p.addParameter('to', [0 0.105, 0.6], @isnumeric); % The camera is horizontal%%
+p.addParameter('from', [0 0.125 -0.40], @isnumeric); % This is the place where we can see more
+p.addParameter('to', [0 0.125, 0.6], @isnumeric); % The camera is horizontal%%
 p.addParameter('resolution', [189 252], @isnumeric); % Original res: 3024 x 4032
 p.addParameter('nraysperpixel', 128, @isnumeric);
 p.addParameter('nbounces', 3, @isnumeric);
-p.addParameter('measimgpath', '', @ischar);
-p.addParameter('illuscale', 0.5, @isnumeric);
+p.addParameter('label', 'CornellBox', @ischar);
 p.parse(varargin{:});
 
 from = p.Results.from;
@@ -17,9 +16,7 @@ to = p.Results.to;
 resolution = p.Results.resolution;
 nRaysPerPixel = p.Results.nraysperpixel;
 nBounces = p.Results.nbounces;
-measImgPath = p.Results.measimgpath;
-illuScale = p.Results.illuscale;
-
+label = p.Results.label;
 %% Create Cornell Box recipe
 thisR = cbBoxCreate('from', from, 'to', to);
 %{
@@ -47,7 +44,7 @@ piRecipeMerge(thisR, mccCB.thisR, 'node name', mccCB.mergeNode);
 thisR.set('asset', 'MCC_B', 'world position', [0 0.035,0.125]);
 thisR.set('asset', 'MCC_B', 'world rotation', [0 0 2]);
 
-%{
+
 %% Add bunny
 assetTreeNameBunny = 'bunny';
 
@@ -61,8 +58,8 @@ refl = ieReadSpectra('cboxSurfaces', wave);
 wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 
-thisR.set('asset', '001_Bunny_O', 'world position', [0 0.005 0]);
-thisR.set('asset', '001_Bunny_O', 'scale', 1.3);
+thisR.set('asset', '001_Bunny_O', 'world position', [0.095 0.059 0]);
+thisR.set('asset', '001_Bunny_O', 'scale', 1.5);
 % thisR.set('asset', bunnychart.mergeNode, 'world rotate', [0 -35 0]);
 % thisR.assets.show
 %}
@@ -76,7 +73,7 @@ thisR.set('film diagonal', 7.056);
 piWrite(thisR);
 % Render
 [scene, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
-sceneName = 'View1';
+sceneName = label;
 scene = sceneSet(scene, 'name', sceneName);
 %{
 sceneWindow(scene);
@@ -86,31 +83,8 @@ sceneSet(scene, 'gamma', 0.5);
 oi = oiCreate;
 oi = oiSet(oi, 'fov', 77);
 oi = oiCompute(oi, scene);
-meanIllu = oiGet(oi, 'mean illuminance');
-oi = oiSet(oi, 'mean illuminance', meanIllu * illuScale);
 % oiWindow(oi);
 
-%% Create real image and sensor
-if ~isempty(measImgPath)
-% measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos', 'pos1');
-% centerImg = fullfile(measPos1Path, 'center', 'IMG_20210105_151748.dng');
-[sensorMeas, inforMeas, ipMeas] = cbDNGRead(measImgPath, 'demosaic', true);
 
-sensorSim = sensorMeas;
-sensorSim = sensorSetSizeToFOV(sensorSim, oiGet(oi, 'fov'), oi);
-wave = 390:10:710;
-cf = ieReadSpectra('p4aCorrected.mat', wave);
-sensorSim = sensorSet(sensorSim, 'color filters', cf);
 
-sensorSim = sensorCompute(sensorSim, oi);
-ipPos1CenterSim = ipCreate;
-ipPos1CenterSim = ipSet(ipPos1CenterSim, 'render demosaic only', true);
-ipPos1CenterSim = ipCompute(ipPos1CenterSim, sensorSim);
-% ipWindow(ip);
-
-prevImgSim = ipGet(ipPos1CenterSim, 'srgb');
-% ieNewGraphWin; imshow(prevImgSim);
-
-prevImgMeas = ipGet(ipMeas, 'srgb');
-% ieNewGraphWin; imshow(prevImgMeas);
 end

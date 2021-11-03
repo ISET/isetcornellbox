@@ -14,7 +14,8 @@ thisRect = [1860  2010  350  255]; %col, row, width, height
 % Read DNG files and other info
 [sensorAR, infoAR, rgbMeanAR, rectsAR] = cbMccChipsDV(imgAName,...
                                                     'corner point', cpAR,...
-                                                    'crop', thisRect);
+                                                    'crop', thisRect,...
+                                                    'vignetting', corrMapG1NormFull);
 %{
 sensorWindow(sensorAR);
 chartRectsDraw(sensorAR,rectsAR);  % Visualize the rectangles
@@ -29,7 +30,8 @@ thisRect = [1860  2010  370  290]; %col, row, width, height
 % Read DNG files and other info
 [sensorCWFR, infoCWFR, rgbMeanCWFR, rectsCWFR] = cbMccChipsDV(imgCWFName,...
                                                     'corner point', cpCWFR,...
-                                                    'crop', thisRect);
+                                                    'crop', thisRect,...
+                                                    'vignetting', corrMapG1NormFull);
 %{
 sensorWindow(sensorCWFR);
 chartRectsDraw(sensorCWFR,rectsCWFR);  % Visualize the rectangles
@@ -44,7 +46,8 @@ thisRect = [1860  2010  370  290]; %col, row, width, height
 % Read DNG files and other info
 [sensorDayR, infoDayR, rgbMeanDayR, rectsDayR] = cbMccChipsDV(imgDayName,...
                                                     'corner point', cpDayR,...
-                                                    'crop', thisRect);
+                                                    'crop', thisRect,...
+                                                    'vignetting', corrMapG1NormFull);
 %{
 sensorWindow(sensorDayR);
 chartRectsDraw(sensorDayR,rectsDayR);  % Visualize the rectangles
@@ -57,9 +60,10 @@ mccName = 'MiniatureMacbethChart';
 wave = 390:10:710;
 patchSize = 32;
 % In isetcalibrate/data/mcc
-lightNameA   = '20201023-illA-Average.mat'; % Tungsten (A)
-lightNameCWF = '20201023-illCWF-Average.mat'; % CWF
-lightNameDay = '20201023-illDay-Average.mat'; % Daylight
+% lightNameA   = '20201023-illA-Average.mat'; % Tungsten (A)
+lightNameA   = 'illA-20201023.mat'; % Tungsten (A)
+lightNameCWF = 'illCWF-20201023.mat'; % CWF
+lightNameDay = 'illDay-20201023.mat'; % Daylight
 
 [sceneA, oiA] = cbMccSceneOISim('illuminant', lightNameA, 'wave', wave,...
                                 'patch size', patchSize);
@@ -144,7 +148,7 @@ cfPredDiag = cfS * diagL;
 sensorT = sensorSet(sensorT, 'color filters', cfPredDiag);
 sensorPlot(sensorT, 'color filters');
 %}
-% cbMccPredEval('measurement', rgbMeanR, 'prediction', predDiag);
+% cbMccPredEval('measurement', rgbMeanR, 'prediction', cfPredDiag);
 %% Constrained lsq equation
 
 consL = cbMccFit(rgbMeanS, rgbMeanR, 'method', 'nonnegative');

@@ -21,8 +21,9 @@ preserveMean = false;
 scene = sceneAdjustIlluminant(scene, illuminant, preserveMean);
 scene = sceneSet(scene, 'name', illuminant);
 
-% oi
-oi = oiCreate;
+% oi - skip all lens vignetting effects
+oi = oiCreate('default');
+oi = oiSet(oi,'optics offaxis method','skip');
 oi = oiCompute(oi, scene);
 oi = oiSet(oi, 'name', illuminant);
 end

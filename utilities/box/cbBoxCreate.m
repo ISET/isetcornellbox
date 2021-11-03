@@ -32,7 +32,7 @@ areaLight = piLightSet(areaLight, 'spd val', lightName);
 
 assetName = '001_AreaLight_O';
 % Move area light above by 0.5 cm
-% thisR.set('asset', assetName, 'world translate', [0 0.005 0]);
+thisR.set('asset', assetName, 'world translate', [0 -0.005 0]);
 thisR.set('asset', assetName, 'obj2light', areaLight);
 
 assetNameCube = '001_CubeLarge_O';
@@ -87,7 +87,8 @@ if isequal(surfaceColor, 'redgreen')
 elseif isequal(surfaceColor, 'white')
     reflList = [wRefl, wRefl wRefl wRefl wRefl wRefl wRefl wRefl];
 end
-for ii=1:numel(matList)
+% Skipped the Sheild material
+for ii=2:numel(matList)
     thisR = cbAssignMaterial(thisR, matList{ii}, reflList(:, ii));
 end
 end

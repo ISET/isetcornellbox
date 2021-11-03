@@ -8,9 +8,14 @@ p.parse(varargin{:});
 rgbMeanS = p.Results.prediction;
 rgbMeanR = p.Results.measurement;
 
+%% Initialization
+colorList = ['r', 'g', 'b'];
+
 %% Global comparison
 ieNewGraphWin;
-plot(rgbMeanS, rgbMeanR, 'o')
+for ii = 1:3
+plot(rgbMeanS(:,ii), rgbMeanR(:,ii), strcat(colorList(ii), 'o')); hold on;
+end
 identityLine;
 axis square
 axis equal
@@ -20,7 +25,6 @@ ylabel('measurement')
 %% Get sample size
 szS = size(rgbMeanS, 1);
 %% Block by block check
-colorList = ['r', 'g', 'b'];
 ieNewGraphWin;
 for ii=1:24
     subplot(6, 4, ii);
