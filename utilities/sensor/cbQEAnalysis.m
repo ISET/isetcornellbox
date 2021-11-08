@@ -32,7 +32,7 @@ p.addRequired('vignetting', @isnumeric);
 
 p.addParameter('patchsize', 32, @isnumeric);
 p.addParameter('method', 'nonnegative', @ischar);
-p.addParameter('fluoremove', true, @islogical);
+p.addParameter('fluoremove', false, @islogical);
 p.parse(imgNames, illuminants, cropCornersMeas,...
             cropCornersSim, vignetting, varargin{:});
 patchSize = p.Results.patchsize;

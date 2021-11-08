@@ -57,7 +57,8 @@ save(oiSavePath, 'oi');
 %}
 
 %%
-sensor = sensorCreate('IMX363');
+% sensor = sensorCreate('IMX363');
+sensor = cbSensorCreate;
 sensor = sensorSetSizeToFOV(sensor, oiGet(oi, 'fov'), oi);
 sensor = sensorSet(sensor, 'exp time', 0.00141 * 3);
 sensor = sensorCompute(sensor, oi);

@@ -1,89 +1,91 @@
-% Noise analysis
+% Dark noise analysis script
 
-%% Initialization
-sensorSimCtr;
+%%
+ieInit;
 
-nROI = 5;
-%% Simulation
+%% Inspect dark current
+darkCurrentPath = fullfile(cboxRootPath, 'local', 'measurement',...
+                            'darkness', 'darkcurrentrate');
+                        
+exposures = [100 50 25 12 6];
 
-roiSelectsSim = cell(1, nROI);
-% [x(horizon), y(vertical), w, h];
-width = 15; height = 15;
-roiSelectsSim{1} = [722, 418, width, height];
-roiSelectsSim{2} = [1478, 550, width, height];
-roiSelectsSim{3} = [2579, 634, width, height];
-roiSelectsSim{4} = [2090, 1904, width, height];
-roiSelectsSim{5} = [1512, 2067, width, height];
-% roiSelectsSim{6} = [1500, 2000, width, height];
-% roiSelectsSim{7} = [2000, 1000, width, height];
-% roiSelectsSim{8} = [2000, 1500, width, height];
-% roiSelectsSim{9} = [2000, 2000, width, height];
+nExposures = numel(exposures);
+nFrames = 5;
 
-[udataSelectsSim, prevImgROISim] = cbRoiSelect(sensorSimCtr, roiSelectsSim);
-% ieNewGraphWin; imshow(prevImgROISim);
-
-%% Measurement
-roiSelectsMeas = cell(1, nROI);
-% [x(horizon), y(vertical), w, h];
-roiSelectsMeas{1} = [908, 553, width, height];
-roiSelectsMeas{2} = [1946, 797, width, height];
-roiSelectsMeas{3} = [3193, 995, width, height];
-roiSelectsMeas{4} = [2732, 2356, width, height];
-roiSelectsMeas{5} = [1980, 2551, width, height];
-% roiSelectsMeas{6} = [1500, 2000, width, height];
-% roiSelectsMeas{7} = [2000, 1000, width, height];
-% roiSelectsMeas{8} = [2000, 1500, width, height];
-% roiSelectsMeas{9} = [2000, 2000, width, height];
-
-[udataSelectsMeas, prevImgROIMeas] = cbRoiSelect(sensorMeasCtr, roiSelectsMeas);
-% ieNewGraphWin; imshow(prevImgROIMeas);
-
-%% Draw the comparison
-
-% Mean RGB
-ieNewGraphWin; hold all
-title('Mean RGB: I am not the final result yet!!')
-for ii = 1:nROI
-    plot(udataSelectsMeas{ii}.mean(1), udataSelectsSim{ii}.mean(1), 'ro',...
-                                'MarkerSize', 8, 'LineWidth', 2);
-    plot(udataSelectsMeas{ii}.mean(2), udataSelectsSim{ii}.mean(2), 'go',...
-                                'MarkerSize', 8, 'LineWidth', 2);  
-    plot(udataSelectsMeas{ii}.mean(3), udataSelectsSim{ii}.mean(3), 'bo',...
-                                'MarkerSize', 8, 'LineWidth', 2);                              
+darkCurrentmeanValue = zeros(nExposures, nFrames);
+darkCurrentDngData = cell(nExposures, nFrames);
+for ii = 1:numel(exposures)
+    
+    thisExpPath = fullfile(darkCurrentPath, num2str(exposures(ii)));
+    darkCurrentDng = dir(fullfile(thisExpPath, '*.dng'));
+    
+    for jj = 1:numel(darkCurrentDng)
+        thisDngFullPath = fullfile(darkCurrentDng(ii).folder, darkCurrentDng(ii).name);
+        [sensor, ~, ~] = cbDNGRead(thisDngFullPath, 'demosaic', false);
+        darkCurrentDngData{ii, jj} = sensorGet(sensor, 'dv');
+        darkCurrentmeanValue(ii, jj) = mean(darkCurrentDngData{ii, jj}(:));
+    end
 end
-identityLine; axis square; box on;
-xlabel('Measured'); ylabel('Simulated')
 
-% STD
-ieNewGraphWin; hold all
-title('STD RGB: I am not the final result yet!!')
-for ii = 1:nROI
-    plot(udataSelectsMeas{ii}.std(1), udataSelectsSim{ii}.std(1), 'ro',...
-                                'MarkerSize', 8, 'LineWidth', 2);
-    plot(udataSelectsMeas{ii}.std(2), udataSelectsSim{ii}.std(2), 'go',...
-                                'MarkerSize', 8, 'LineWidth', 2);  
-    plot(udataSelectsMeas{ii}.std(3), udataSelectsSim{ii}.std(3), 'bo',...
-                                'MarkerSize', 8, 'LineWidth', 2);                              
+ieNewGraphWin; plot(darkCurrentmeanValue); ylim([63, 65]);
+
+darkCurrentDVs = mean(darkCurrentmeanValue, 2);
+
+ieNewGraphWin; plot(1./exposures, darkCurrentDVs, 'o-'); ylim([64.18, 64.2]);
+
+% Fit the dark current rate
+P = polyfit(1./exposures,darkCurrentDVs,1);
+
+voltSwing = sensorGet(sensor, 'pixel voltage swing');
+bits = sensorGet(sensor, 'nbits');
+dv2volts = voltSwing / (2^bits - 64);
+darkCurrentRate = P(1) * dv2volts;
+
+%% Inspect read noise & DSNU
+rnDSNUPath = fullfile(cboxRootPath, 'local', 'measurement',...
+                            'darkness', 'readnoise_dsnu', '74945');
+rnDSNUFiles = dir(fullfile(rnDSNUPath, '*.dng'));
+nFrames = numel(rnDSNUFiles);
+rnDSNUDngData = cell(1, nFrames);
+readnoiseStdDV = zeros(1, nFrames);
+
+% Read data
+for ii=1:nFrames
+    [sensor, ~, ~] = cbDNGRead(fullfile(rnDSNUFiles(ii).folder, rnDSNUFiles(ii).name),...
+                                'demosaic', false);
+    rnDSNUDngData{ii} = double(sensorGet(sensor,'dv'));
 end
-identityLine; axis square; box on;
-xlabel('Measured'); ylabel('Simulated')
 
-% STD/mean: Coefficient variation
-
-ieNewGraphWin; hold all
-title('Coefficient Variation RGB: I am not the final result yet!!')
-for ii = 1:nROI
-    cvMeas = udataSelectsMeas{ii}.std ./ udataSelectsMeas{ii}.mean;
-    cvSim = udataSelectsSim{ii}.std ./udataSelectsSim{ii}.mean;
-    plot(cvMeas(1),...
-         cvSim(1), 'ro',...
-                                'MarkerSize', 8, 'LineWidth', 2);
-    plot(cvMeas(2),...
-         cvSim(2), 'go',...
-                                'MarkerSize', 8, 'LineWidth', 2);  
-    plot(cvMeas(3),...
-         cvSim(3), 'bo',...
-                                'MarkerSize', 8, 'LineWidth', 2);                              
+% First have the averaged img that represents offset (DSNU)
+meanDSNUImg = zeros(size(rnDSNUDngData{1}));
+for ii=1:nFrames
+    meanDSNUImg = meanDSNUImg + rnDSNUDngData{ii};
 end
-xlim([0 0.2]), ylim([0 0.2]); identityLine; axis square; box on; 
-xlabel('Measured'); ylabel('Simulated')
+meanDSNUImg = meanDSNUImg / nFrames;
+ieNewGraphWin; imagesc(meanDSNUImg);
+dsnuEst = std(meanDSNUImg, 1, 'all');
+dsnuVolt = dv2volts * dsnuEst;
+
+% Estimate read noise by subtracting the mean value
+for ii=1:nFrames
+    readnoiseStdDV(ii) = std(rnDSNUDngData{ii} - meanDSNUImg, 1, 'all');
+end
+
+readnoiseDV = mean(readnoiseStdDV(:));
+readnoiseVolt = dv2volts * readnoiseDV;
+
+%% Inspect PRNU
+slopePath = fullfile(cboxRootPath, 'local', 'measurement',...
+                     'integratingsphere', 'ac', 'res', 'offset_slope_60_ac.mat');
+load(slopePath);
+ieNewGraphWin; imagesc(slopeMapG1);
+% Get a 15 by 15 window local for standard deviation calculation
+rect = [799 972 25 25];
+slopeWindow = imcrop(slopeMapG1, rect);
+% ieNewGraphWin; imagesc(slopeWindow);
+PRNU = std(slopeWindow(:))/mean(slopeWindow(:)) * 100;
+%% Display all the noise values
+fprintf('DSNU: %f\n', dsnuVolt);
+fprintf('Read noise: %f\n', readnoiseVolt);
+fprintf('Dark current rate: %f\n', darkCurrentRate);
+fprintf('PRNU(reference): %f\n', PRNU);

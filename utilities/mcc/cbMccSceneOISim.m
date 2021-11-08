@@ -17,6 +17,7 @@ mccName    = p.Results.mccname;
 % scene
 scene = sceneCreate('macbeth', patchSize, wave,...
                         mccName, true);
+scene = sceneSet(scene, 'fov', sceneGet(scene, 'fov') * 2);
 preserveMean = false;
 scene = sceneAdjustIlluminant(scene, illuminant, preserveMean);
 scene = sceneSet(scene, 'name', illuminant);
