@@ -66,3 +66,7 @@ sensorWindow(sensor);
 
 %%
 sensorPlot(sensor, 'dv hline', [1, 1000], 'two lines', true);
+
+%%
+ip = cbIpCompute(sensor);
+ipWindow(ip);
