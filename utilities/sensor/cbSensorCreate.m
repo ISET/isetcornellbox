@@ -12,7 +12,7 @@ transColorFilter = p.Results.transcolorfilter;
 sensor = sensorCreate('IMX363');
 % Set sensor noise values
 sensor = sensorSet(sensor, 'dsnu level', 0.000038);
-sensor = sensorSet(sensor, 'dark current rate', 0.000021);
+sensor = sensorSet(sensor, 'pixel dark voltage', 0.000021);
 sensor = sensorSet(sensor, 'pixel read noise', 0.000226);
 sensor = sensorSet(sensor, 'prnu level', 0.544447);
 if transColorFilter
