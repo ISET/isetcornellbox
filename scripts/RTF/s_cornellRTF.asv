@@ -28,14 +28,17 @@ piWRS(thisR);
 
 
 cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
+%cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
+
 filmdistance_mm=0.464135918+1;
-filmdistance_mm=0.444135918+1;
+filmdistance_mm=0.464135918+0.001;
+
 thisR.camera = cameraRTF;
 thisR.set('film diagonal', 7.04); % mm
 thisR.set('filmdistance',filmdistance_mm/1000)
 %% Specify rendering settings
 thisR.set('film resolution',[512 512]);
-nRaysPerPixel = 100;
+nRaysPerPixel = 2000;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
 
@@ -57,15 +60,19 @@ oiSet(oi, 'gamma', 0.5);
 oiSavePath = fullfile(cboxRootPath, 'local', 'simulation', 'pipeline', strcat(oiName, '.mat'));
 save(oiSavePath, 'oi');
 %}
-close all;
-imagesc(oi.data.photons(:,:,1))
-return
+
+
 %%
-sensor = sensorCreate('IMX363');
+sensor = cbSensorCreate;
 sensor = sensorSetSizeToFOV(sensor, oiGet(oi, 'fov'), oi);
-sensor = sensorSet(sensor, 'exp time', 0.00141 * 3);
+sensor = sensorSet(sensor, 'exp time', 0.00141 * 3*7);
 sensor = sensorCompute(sensor, oi);
 sensorWindow(sensor);
 
+
 %%
 sensorPlot(sensor, 'dv hline', [1, 1000], 'two lines', true);
+
+%%
+ip = cbIpCompute(sensor);
+ipWindow(ip);

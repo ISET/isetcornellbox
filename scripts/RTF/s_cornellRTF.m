@@ -28,6 +28,8 @@ piWRS(thisR);
 
 
 cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
+%cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
+
 filmdistance_mm=0.464135918+1;
 filmdistance_mm=0.464135918+0.001;
 
@@ -36,7 +38,7 @@ thisR.set('film diagonal', 7.04); % mm
 thisR.set('filmdistance',filmdistance_mm/1000)
 %% Specify rendering settings
 thisR.set('film resolution',[512 512]);
-nRaysPerPixel = 2*4000;
+nRaysPerPixel = 2000;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
 
