@@ -36,7 +36,7 @@ thisR.set('film diagonal', 7.04); % mm
 thisR.set('filmdistance',filmdistance_mm/1000)
 %% Specify rendering settings
 thisR.set('film resolution',[512 512]);
-nRaysPerPixel = 4000;
+nRaysPerPixel = 2*4000;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
 
