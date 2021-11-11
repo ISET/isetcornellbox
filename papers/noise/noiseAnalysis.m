@@ -68,7 +68,7 @@ dsnuVolt = dv2volts * dsnuEst;
 
 % Estimate read noise by subtracting the mean value
 for ii=1:nFrames
-    readnoiseStdDV(ii) = std(rnDSNUDngData{ii} - meanDSNUImg, 1, 'all');
+    readnoiseStdDV(ii) = std(rnDSNUDngData{ii}(:) - meanDSNUImg(:));
 end
 
 readnoiseDV = mean(readnoiseStdDV(:));

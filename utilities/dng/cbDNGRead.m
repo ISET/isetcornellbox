@@ -29,13 +29,8 @@ demos = p.Results.demosaic;
 transColorFilter = p.Results.transcolorfilter;
 %% Read sensor
 [sensor, info] = sensorDNGRead(imgName, 'crop',crop);
+sensor = cbSensorCorrect(sensor, 'transcolorfilter', transColorFilter);
 
-if transColorFilter
-    wave = 390:10:710;
-    cf = ieReadSpectra('p4aCorrected.mat', wave);
-    sensor = sensorSet(sensor, 'color filters', cf);
-    sensor = sensorSet(sensor, 'ir filter', ones(1, numel(wave)));
-end
 %% Process image
 if demos
     ip = ipCreate;

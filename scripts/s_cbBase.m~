@@ -24,32 +24,27 @@ thisR.set('to', newTo);
 % Render the scene without lens
 piWRS(thisR);
 %}
-%% Add lens RTF
-
-
-cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
-cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
-
-filmdistance_mm=0.464135918+1;
-filmdistance_mm=0.464135918+0.001;
-
-thisR.camera = cameraRTF;
+%% Add lens
+lensfile = 'wide.77deg.4.38mm.json'; % in 
+fprintf('Using lens: %s\n',lensfile);
+thisR.camera = piCameraCreate('omni','lensFile',lensfile);
+thisR.set('aperture diameter', 2.5318);
 thisR.set('film diagonal', 7.04); % mm
-thisR.set('filmdistance',filmdistance_mm/1000)
+
 %% Specify rendering settings
 thisR.set('film resolution',[512 512]);
-nRaysPerPixel = 10;
+nRaysPerPixel = 512;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
 
 %% Set first focus (in the back)
-%thisR.set('focus distance', 0.5);
+thisR.set('focus distance', 0.5);
 
 % {
 % Write and render
 piWrite(thisR);
 % Render
-[oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false,'docker image','vistalab/pbrt-v3-spectral:raytransfer-spectral');
+[oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
 oiName = 'CBLens_Base';
 oi = oiSet(oi, 'name', oiName);
 oiWindow(oi);
@@ -61,14 +56,13 @@ oiSavePath = fullfile(cboxRootPath, 'local', 'simulation', 'pipeline', strcat(oi
 save(oiSavePath, 'oi');
 %}
 
-
 %%
+% sensor = sensorCreate('IMX363');
 sensor = cbSensorCreate;
 sensor = sensorSetSizeToFOV(sensor, oiGet(oi, 'fov'), oi);
-sensor = sensorSet(sensor, 'exp time', 0.00141 * 3*7);
+sensor = sensorSet(sensor, 'exp time', 0.00141 * 3);
 sensor = sensorCompute(sensor, oi);
 sensorWindow(sensor);
-
 
 %%
 sensorPlot(sensor, 'dv hline', [1, 1000], 'two lines', true);
@@ -76,3 +70,5 @@ sensorPlot(sensor, 'dv hline', [1, 1000], 'two lines', true);
 %%
 ip = cbIpCompute(sensor);
 ipWindow(ip);
+img = ipGet(ip, 'srgb');
+ieNewGrpahWin; imagesc
