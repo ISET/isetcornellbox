@@ -31,7 +31,7 @@ cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtosc
 %cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
 
 filmdistance_mm=0.464135918+1;
-filmdistance_mm=0.464135918+0.001;
+filmdistance_mm=0.464135918+0.005;
 
 thisR.camera = cameraRTF;
 thisR.set('film diagonal', 7.04); % mm

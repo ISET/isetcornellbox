@@ -9,7 +9,10 @@ p.parse(varargin{:});
 transColorFilter = p.Results.transcolorfilter;
 
 %%
-sensor = sensorCreate('IMX363');
+sensor = sensorCreate('IMX363', [], 'isospeed', 55);
+sensor = cbSensorCorrect(sensor, 'transcolorfilter', transColorFilter);
+%{
+% It has been wrapped in cbSensorCorrect
 % Set sensor noise values
 sensor = sensorSet(sensor, 'dsnu level', 0.000038);
 sensor = sensorSet(sensor, 'pixel dark voltage', 0.000021);
@@ -21,4 +24,5 @@ if transColorFilter
     sensor = sensorSet(sensor, 'color filters', cf);
     sensor = sensorSet(sensor, 'ir filter', ones(1, numel(wave)));
 end
+%}
 end
