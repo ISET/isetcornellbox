@@ -28,17 +28,19 @@ piWRS(thisR);
 
 
 cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
+cameraRTF = piCameraCreate('raytransfer','lensfile','dgauss.22deg.50.0mm_aperture6.0.json-filmtoscene-raytransfer.json');
 %cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
 
 filmdistance_mm=0.464135918+1;
 filmdistance_mm=0.464135918+0.005;
+filmdistance_mm=37
 
 thisR.camera = cameraRTF;
 thisR.set('film diagonal', 7.04); % mm
 thisR.set('filmdistance',filmdistance_mm/1000)
 %% Specify rendering settings
 thisR.set('film resolution',[512 512]);
-nRaysPerPixel = 5000;
+nRaysPerPixel = 10;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
 
@@ -61,6 +63,12 @@ oiSavePath = fullfile(cboxRootPath, 'local', 'simulation', 'pipeline', strcat(oi
 save(oiSavePath, 'oi');
 %}
 
+%% Manual load
+label={};path={}
+ label{end+1}='nonlinear';path{end+1}='/home/thomas/Documents/stanford/libraries/pbrt-v3-spectral/scenes/simpleScene/rtfcornell.dat';
+
+ oi = piDat2ISET(path{1}, 'wave', 400:10:700, 'recipe', thisR);
+oiWindow(oi)
 
 %%
 sensor = cbSensorCreate;
@@ -79,4 +87,4 @@ ipWindow(ip);
 
 
 
-save('/scratch/thomas42/cornell-RTF-nonlinear.mat','sensor','oi')
+%save('/scratch/thomas42/cornell-RTF-nonlinear.mat','sensor','oi')
