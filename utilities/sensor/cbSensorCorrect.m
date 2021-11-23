@@ -13,7 +13,7 @@ dsnu = 0.00038;
 darkVoltRate = 0.000021;
 readNoiseVolt = 2.2555e-04;
 prnu = 0.544447;
-% prnu = 0.7;
+% prnu = 0.7; % This was the reported number
 %% Set sensor noise values
 sensor = sensorSet(sensor, 'dsnu level', dsnu);
 sensor = sensorSet(sensor, 'pixel dark voltage', darkVoltRate);

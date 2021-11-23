@@ -97,12 +97,11 @@ for ii=1:nExp
     meanLocalWindowB{ii} = conv2(meanSensorImgsB{ii}, kernel, 'valid');
 end
 
-%% Apply linear fitting for everypixel
+%% Apply linear fitting for every pixel
 [offsetMapR, slopeMapR] = cbIntSphereAnalyze(meanLocalWindowR, 1./exposures);
 [offsetMapG1, slopeMapG1] = cbIntSphereAnalyze(meanLocalWindowG1, 1./exposures);
 [offsetMapG2, slopeMapG2] = cbIntSphereAnalyze(meanLocalWindowG2, 1./exposures);
 [offsetMapB, slopeMapB] = cbIntSphereAnalyze(meanLocalWindowB, 1./exposures);
-
 
 %{
 ieNewGraphWin;

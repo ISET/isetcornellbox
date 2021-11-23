@@ -54,8 +54,7 @@ thisMeanDV = mean(cropSensorImgs(:));
 thisVarDV = var(cropSensorImgs(:));
 sensorCB = cbSensorCreate;
 prnu = sensorGet(sensorCB, 'prnu level')/100;
-estCG = thisMeanDV * (1+prnu^2)/(thisVarDV-thisMeanDV^2*prnu^2);
-% nElectron = estCG * thisMeanDV;
+estCG = (thisVarDV-thisMeanDV^2*prnu^2)/thisMeanDV * (1+prnu^2); % (dv/e-)
 
 % Assume analog gain = 1
 %{
@@ -63,13 +62,28 @@ volt = nElectron * sensorGet(sensor, 'pixel conversion gain');
 predDV = volt / sensorGet(sensor, 'pixel voltage swing') * 1024;
 %}
 vSwing = sensorGet(sensor, 'pixel voltage swing');
-assumedCG = 1/(sensorGet(sensor, 'pixel conversion gain') * 1024/vSwing);
+assumedCG = (sensorGet(sensor, 'pixel conversion gain') * 1024/vSwing);
 ratio = estCG / assumedCG;
-fprintf('Ratio: %.4f\n', ratio);
-
+fprintf('Ratio: %.4f.\n', ratio);
+fprintf('Relative error: %.4f percent \n', abs(estCG-assumedCG)/assumedCG*100);
 %% Plot figures
-ieNewGraphWin; histogram(cropSensorImgs(:));
 
+ieNewGraphWin; 
+histogram(cropSensorImgs(:), 50, 'BinLimits', [300 360],...
+                'facecolor', [0 0.4470 0.7410],...
+                'edgecolor', 'none');
+grid on; ylabel('Counts'); box on; xlabel('Digital value')
+
+ieNewGraphWin;
+histogram(cropSensorImgs(:)/estCG, 50, 'BinLimits', [300 360]/estCG,...
+                'facecolor', [0.8500 0.3250 0.0980],...
+                'edgecolor', 'none');
+grid on; xlabel('# of electrons'); box on;
+
+% Bar
+ieNewGraphWin;
+X = categorical({'Nominal', 'Estimated'});
+bar(X, [assumedCG, estCG]);
 %% Deprecated
 %{
 %%

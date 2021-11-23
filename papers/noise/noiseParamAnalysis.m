@@ -78,7 +78,6 @@ readnoiseVolt = dv2volts * readnoiseDV;
 slopePath = fullfile(cboxRootPath, 'local', 'measurement',...
                      'integratingsphere', 'ac', 'res', 'offset_slope_60_ac.mat');
 load(slopePath);
-
 rect = [799 972 25 25];
 slopeWindow = imcrop(slopeMapG1, rect);
 % ieNewGraphWin; imagesc(slopeWindow);
