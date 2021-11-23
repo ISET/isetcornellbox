@@ -24,11 +24,11 @@ if isequal(type, 'slope')
     [~, gy] = gradient(dataDownS);
     switch channel 
         case 'G'
-            excludedP = find(abs(gy) > 0.03);
+            excludedP = find(abs(gy)./dataDownS > 0.03);
         case 'R'
-            excludedP = find(abs(gy) > 0.01);
+            excludedP = find(abs(gy)./dataDownS > 0.03);
         case 'B'
-            excludedP = find(abs(gy) > 0.02);
+            excludedP = find(abs(gy)./dataDownS > 0.03);
     end
         
 else
@@ -39,7 +39,7 @@ span = 10; spanPerc = span/(h * w);
 % Local fitting algorithm lowess
 sf = fit([xxNorm(:), yyNorm(:)], dataDownS(:), 'lowess', 'Span', spanPerc,...
                                                 'Exclude', excludedP);
-% plot(sf, [xxNorm(:), yyNorm(:)], data(:))
+% plot(sf, [xxNorm(:), yyNorm(:)], dataDownS(:))
 d = reshape(sf([xxNorm(:), yyNorm(:)]), h, w);
 
 % Upsampling it back to original size

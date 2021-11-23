@@ -1,10 +1,12 @@
+% Note: this method is deprecated, was just used to compare the difference
+
 % vignettingFittingSingleImg
 % 
 % Fit the lens vignetting with single exp
 %%
 
 dngDir = fullfile(cboxRootPath, 'local', 'measurement', 'integratingsphere',...
-                                 'ac', '5');
+                                 'dc_p55_pos1', 'res');
                              
 dngFileList = dir(fullfile(dngDir, '*.dng'));
 

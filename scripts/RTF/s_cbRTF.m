@@ -27,19 +27,21 @@ piWRS(thisR);
 %% Add lens RTF
 
 
-cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
-cameraRTF = piCameraCreate('raytransfer','lensfile','dgauss.22deg.50.0mm_aperture6.0.json-filmtoscene-raytransfer.json');
+% cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer.json');
+cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-ellipse-raytransfer.json');
+
+% cameraRTF = piCameraCreate('raytransfer','lensfile','dgauss.22deg.50.0mm_aperture6.0.json-filmtoscene-raytransfer.json');
 %cameraRTF = piCameraCreate('raytransfer','lensfile','pixel4a-rearcamera-filmtoscene-raytransfer-linear.json');
 
-filmdistance_mm=0.464135918+1;
+% filmdistance_mm=0.464135918+1;
 filmdistance_mm=0.464135918+0.005;
-filmdistance_mm=37
+% filmdistance_mm=37
 
 thisR.camera = cameraRTF;
 thisR.set('film diagonal', 7.04); % mm
 thisR.set('filmdistance',filmdistance_mm/1000)
 %% Specify rendering settings
-thisR.set('film resolution',[512 512]);
+thisR.set('film resolution',[256 256]);
 nRaysPerPixel = 10;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',5);
@@ -51,7 +53,7 @@ thisR.set('nbounces',5);
 % Write and render
 piWrite(thisR);
 % Render
-[oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false,'docker image','vistalab/pbrt-v3-spectral:raytransfer-spectral');
+[oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false,'docker image','vistalab/pbrt-v3-spectral:raytransfer-ellipse');
 oiName = 'CBLens_Base';
 oi = oiSet(oi, 'name', oiName);
 oiWindow(oi);
@@ -64,11 +66,13 @@ save(oiSavePath, 'oi');
 %}
 
 %% Manual load
+%{
 label={};path={}
  label{end+1}='nonlinear';path{end+1}='/home/thomas/Documents/stanford/libraries/pbrt-v3-spectral/scenes/simpleScene/rtfcornell.dat';
 
  oi = piDat2ISET(path{1}, 'wave', 400:10:700, 'recipe', thisR);
 oiWindow(oi)
+%}
 
 %%
 sensor = cbSensorCreate;

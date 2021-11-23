@@ -1,4 +1,4 @@
-dngpath = '/home/zhenglyu/Desktop/git/isetcornellbox/local/measurement/noise/darkcurrent/ISO_55';
+dngpath = '/mnt/disks/sdb/dataset/cornellbox/integratingsphere/20211116_dc_p55_pos1';
 
 fileList = dir(fullfile(dngpath,'*.dng'));
 

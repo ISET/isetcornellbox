@@ -1,7 +1,9 @@
 % vignettingFittingIntSphere
 % 
 % Fit the lens vignetting with the slope of integrating sphere
-% Used to generate lens vignetting figures
+% Used to generate lens vignetting figures.
+
+% Note: the estimated offset and slope was for camera focused at 0.55 m
 %% Init
 ieInit;
 
@@ -12,8 +14,8 @@ width = 4032; height = 3024;
 %%
 
 dataDir = fullfile(cboxRootPath, 'local', 'measurement', 'integratingsphere',...
-                                 'ac', 'res');
-dataName = 'offset_slope_60_ac.mat';
+                                 'dc_p55_pos1', 'res');
+dataName = 'offset_slope_dc_p55_pos1.mat';
 
 load(fullfile(dataDir, dataName));
 
@@ -70,17 +72,18 @@ colorbar; caxis([0.3 1])
 % Check the difference
 %{
 % Generate figure
-ieNewGraphWin; imagesc(abs(pixel4aLensVignetSlopeR-pixel4aLensVignetSlope) * 100)
+ieNewGraphWin; imagesc(abs(pixel4aLensVignetSlopeR-pixel4aLensVignetSlope)./ pixel4aLensVignetSlope* 100)
 axis off; colormap('gray'); c = colorbar; c.Ruler.TickLabelFormat='%g%%';
-caxis([0 3])
+caxis([0 5])
 
-ieNewGraphWin; imagesc(abs(pixel4aLensVignetSlopeB-pixel4aLensVignetSlope) * 100)
+ieNewGraphWin; imagesc(abs(pixel4aLensVignetSlopeB-pixel4aLensVignetSlope)./pixel4aLensVignetSlope * 100)
 axis off; colormap('gray'); c = colorbar; c.Ruler.TickLabelFormat='%g%%';
-caxis([0 8])
+caxis([0 5])
 
 %}
 
 %% Save results
-fName = 'p4aLensVignet.mat';
-savePath = fullfile(cboxRootPath, 'data', 'lens', 'vignetting', fName);
+fName = 'p4aLensVignet_dc_p55_pos1.mat';
+savePath = fullfile(dataDir, fName);
 save(savePath, 'pixel4aLensVignetSlope');
+

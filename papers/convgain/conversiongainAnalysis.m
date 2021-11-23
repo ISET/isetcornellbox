@@ -2,15 +2,16 @@
 ieInit;
 
 %%
-tmp = load('p4aLensVignet.mat', 'pixel4aLensVignetSlope');
+tmp = load('p4aLensVignet_dc_p55_pos1.mat', 'pixel4aLensVignetSlope');
 vignetting = tmp.pixel4aLensVignetSlope;
 % ieNewGraphWin; imagesc(vignetting);
 %% initialization
 exposures = [10];
-nFrames = 10;
+nFrames = 15;
 nExp = numel(exposures);
 intSphereDir = fullfile(cboxRootPath, 'local', 'measurement',...
-                                      'integratingsphere', 'ac');
+                                      'integratingsphere',...
+                                        'dc_p55_pos1');
 % intSphereDir = fullfile(cboxRootPath, 'local', 'measurement',...
 %                                       'QEcalibration', 'QE','60_repeat', 'A',...
 %                                       'midcenter');                                  
@@ -28,6 +29,7 @@ end
 
 %%
 cropWindow = [980 759 10 10];
+% cropWindow = [1009 763 15 15];
 %{
 tmp = imresize(vignetting, 0.5);
 ieNewGraphWin; imagesc(tmp);
@@ -65,7 +67,11 @@ assumedCG = 1/(sensorGet(sensor, 'pixel conversion gain') * 1024/vSwing);
 ratio = estCG / assumedCG;
 fprintf('Ratio: %.4f\n', ratio);
 
+%% Plot figures
+ieNewGraphWin; histogram(cropSensorImgs(:));
 
+%% Deprecated
+%{
 %%
 meanSensorImgs = average2DCell(sensorImgs, 2);
 meanSensorImgsR = cell(1, nExp);
@@ -92,3 +98,4 @@ meanDVNoPRNU = mean(meanLocalWin(:));
 
 %% Try isUniformPatch function
 % res = isUniformPatch(meanLocalWin);
+%}

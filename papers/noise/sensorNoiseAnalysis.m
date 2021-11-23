@@ -103,8 +103,8 @@ plot(meanMeas, stdMeas, 'bo');
 % Simulation
 plot(meanSim, stdSim, 'r*');
 legend('Measured', 'Simulated')
-ylabel('Standard deviation (dv)'); xlabel('Measurement (dv)');
-axis square; box on; grid on;
+ylabel('Standard deviation (dv)'); xlabel('Mean value (dv)');
+axis square; box on; grid on; ylim([0 20])
 
 d = polyfit(stdMeas, meanMeas, 2);
 meanPred = polyval(d,stdMeas);
