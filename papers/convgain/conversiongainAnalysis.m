@@ -29,7 +29,6 @@ end
 
 %%
 cropWindow = [980 759 10 10];
-% cropWindow = [1009 763 15 15];
 %{
 tmp = imresize(vignetting, 0.5);
 ieNewGraphWin; imagesc(tmp);
@@ -72,18 +71,23 @@ ieNewGraphWin;
 histogram(cropSensorImgs(:), 50, 'BinLimits', [300 360],...
                 'facecolor', [0 0.4470 0.7410],...
                 'edgecolor', 'none');
-grid on; ylabel('Counts'); box on; xlabel('Digital value')
+grid on; box on; xlabel('Digital value'); ylabel('Counts');
+xticks([300:20:360]); xlim([300 360])
 
 ieNewGraphWin;
-histogram(cropSensorImgs(:)/estCG, 50, 'BinLimits', [300 360]/estCG,...
+histogram(cropSensorImgs(:)/estCG, 50, 'BinLimits', uint32([300 360]/estCG/10)*10,...
                 'facecolor', [0.8500 0.3250 0.0980],...
                 'edgecolor', 'none');
-grid on; xlabel('# of electrons'); box on;
-
+grid on; xlabel('# of electrons'); box on; ylabel('Counts');
+xticks([1750:150:2200]); xlim([1750 2200])
 % Bar
 ieNewGraphWin;
-X = categorical({'Nominal', 'Estimated'});
-bar(X, [assumedCG, estCG]);
+X = categorical({'Estimated', 'Nominal'});
+b = bar(X, [estCG, assumedCG], 0.7); 
+b.FaceColor = 'flat';
+b.EdgeColor = 'none';
+b.CData(2,:) = [0.8500 0.3250 0.0980]; b.CData(1,:) = [0 0.4470 0.7410];
+ylabel('Conversion gain (dv/e^-)');
 %% Deprecated
 %{
 %%
