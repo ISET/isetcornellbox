@@ -9,6 +9,9 @@ p.addParameter('resolution', [189 252], @isnumeric); % Original res: 3024 x 4032
 p.addParameter('nraysperpixel', 128, @isnumeric);
 p.addParameter('nbounces', 3, @isnumeric);
 p.addParameter('label', 'CornellBox', @ischar);
+p.addParameter('lenstype', 'raytransfer', @ischar);
+p.addParameter('lensfile', fullfile(cboxRootPath, 'data', 'lens', 'pixel4a-rearcamera-ellipse-raytransfer.json'), @ischar);
+p.addParameter('filmdistance', 0.464135918+0.001, @isnumeric);
 p.parse(varargin{:});
 
 from = p.Results.from;
@@ -17,6 +20,11 @@ resolution = p.Results.resolution;
 nRaysPerPixel = p.Results.nraysperpixel;
 nBounces = p.Results.nbounces;
 label = p.Results.label;
+
+lensType = p.Results.lenstype;
+lensFile = p.Results.lensfile;
+
+filmDistance_mm = p.Results.filmdistance;
 %% Create Cornell Box recipe
 thisR = cbBoxCreate('from', from, 'to', to);
 %{
@@ -59,7 +67,7 @@ wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 
 thisR.set('asset', '001_Bunny_O', 'world position', [0.095 0.059 0]);
-thisR.set('asset', '001_Bunny_O', 'scale', 1.5);
+thisR.set('asset', '001_Bunny_O', 'scale', 1.4);
 % thisR.set('asset', bunnychart.mergeNode, 'world rotate', [0 -35 0]);
 % thisR.assets.show
 %}
@@ -67,24 +75,30 @@ thisR.set('asset', '001_Bunny_O', 'scale', 1.5);
 thisR.set('film resolution',resolution);
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',nBounces);
-thisR.set('fov', 50);
+thisR.set('fov', 84);
 thisR.set('film diagonal', 7.056);
+
+%% Add RTF lens
+% lensFile = fullfile(cboxRootPath, 'data', 'lens', 'pixel4a-rearcamera-ellipse-raytransfer.json');
+cameraRTF = piCameraCreate(lensType,'lensfile',lensFile);
+% filmdistance_mm=0.464135918+0.001;
+thisR.camera = cameraRTF;
+if ~isempty(filmDistance_mm)
+    thisR.set('film distance', filmDistance_mm/1000);
+end
+
+%%
+
 % Write and render
 piWrite(thisR);
 % Render
-[scene, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
+[oi, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false,...
+                        'docker image','vistalab/pbrt-v3-spectral:raytransfer-ellipse');
 sceneName = label;
-scene = sceneSet(scene, 'name', sceneName);
+oi = sceneSet(oi, 'name', sceneName);
 %{
-sceneWindow(scene);
-sceneSet(scene, 'gamma', 0.5);
+oiWindow(oi);
+oiSet(oi, 'gamma', 0.5);
 %}
-%% Create OI
-oi = oiCreate;
-oi = oiSet(oi, 'fov', 77);
-oi = oiCompute(oi, scene);
-% oiWindow(oi);
-
-
 
 end
