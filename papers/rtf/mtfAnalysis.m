@@ -18,7 +18,8 @@ ipWindow(ipMeasBack);
 [roiLocs,roiMeasBack] = ieROISelect(ipMeasBack);
 roiIntMeasBack = round(roiMeasBack.Position);
 %}
-roiIntMeasBack = [1807 1795 65 96];
+roiIntMeasBack = [1953        2087          43          68];
+% roiIntMeasBack = [1807 1795 65 96];
 mtfDataMeasBack = cbMTFAnalysis(ipMeasBack, roiIntMeasBack, dx);
 filmHeightMeasBack = cbSensorLoc2FilmHeight(sensorMeasBack,...
                                     [roiIntMeasBack(2), roiIntMeasBack(1)]);
@@ -32,7 +33,7 @@ ipWindow(ipMeasFront);
 [roiLocs,roiMeasFront] = ieROISelect(ipMeasFront);
 roiIntMeasFront = round(roiMeasFront.Position);
 %}
-roiIntMeasFront = [2380 1883 66 111];
+roiIntMeasFront = [2518 1557 97 144]; 
 mtfDataMeasFront = cbMTFAnalysis(ipMeasFront, roiIntMeasFront, dx);
 filmHeightMeasFront = cbSensorLoc2FilmHeight(sensorMeasFront,...
                                     [roiIntMeasFront(2), roiIntMeasFront(1)]);
@@ -76,7 +77,7 @@ ipWindow(ipSim);
 roiIntSimFront = round(roiSimFront.Position);
 %}
 
-roiIntSimFront = [2612 2138 38 73];
+roiIntSimFront = [2511        1667          48          127]; % [2461 1546 135 202];
 mtfDataSimFront = cbMTFAnalysis(ipSim, roiIntSimFront, dx);
 filmHeightSimFront = cbSensorLoc2FilmHeight(sensorSim,...
                                     [roiIntSimFront(2), roiIntSimFront(1)]);
@@ -84,22 +85,51 @@ filmHeightSimFront = cbSensorLoc2FilmHeight(sensorSim,...
 %% Figure plot: Focus back
 freqMeasBack = mtfDataMeasBack.freq + 0.0001;
 mtfMeasBack = mtfDataMeasBack.mtf(:,4);
+lsfxMeasBack = mtfDataMeasBack.lsfx;
+lsfMeasBack = mtfDataMeasBack.lsf;
 freqSimBack = mtfDataSimBack.freq + 0.0001;
 mtfSimBack = mtfDataSimBack.mtf(:,4);
+lsfxSimBack = mtfDataSimBack.lsfx;
+lsfSimBack = mtfDataSimBack.lsf;
 
 freqMeasFront = mtfDataMeasFront.freq + 0.0001;
 mtfMeasFront = mtfDataMeasFront.mtf(:,4);
+lsfxMeasFront = mtfDataMeasFront.lsfx;
+lsfMeasFront = mtfDataMeasFront.lsf;
 freqSimFront = mtfDataSimFront.freq + 0.0001;
 mtfSimFront = mtfDataSimFront.mtf(:,4);
+lsfxSimFront = mtfDataSimFront.lsfx;
+lsfSimFront = mtfDataSimFront.lsf;
 
+% MTF curve
+% {
 ieNewGraphWin; hold all; 
-plot(freqMeasBack, mtfMeasBack, '--k', 'LineWidth', 5);
-plot(freqSimBack, mtfSimBack, 'k', 'LineWidth', 5);
-plot(freqMeasFront, mtfMeasFront, '--r', 'LineWidth', 5);
-plot(freqSimFront, mtfSimFront, 'r', 'LineWidth', 5);
+plot(freqMeasBack, mtfMeasBack,':k','LineWidth', 8);
+plot(freqSimBack, mtfSimBack, 'k','LineWidth', 8);
+plot(freqMeasFront, mtfMeasFront, ':r', 'LineWidth', 8);
+plot(freqSimFront, mtfSimFront, 'r', 'LineWidth', 8);
 box on; grid on;
 xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
 xlim([0 350]); ylim([0 1])
+legend('MTF@0.5m-Meas', 'MTF@0.5m-Sim', 'MTF@0.3m-Meas', 'MTF@0.3m-Sim');
+title('Focused @0.5m');
+%}
+
+% LSF
+% {
+ieNewGraphWin; hold all;
+plot(lsfxMeasBack, lsfMeasBack, ':k', 'LineWidth', 8);
+plot(lsfxSimBack-0.0009, lsfSimBack, 'k', 'LineWidth', 8);
+plot(lsfxMeasFront+0.0050, lsfMeasFront, ':r', 'LineWidth', 8);
+plot(lsfxSimFront+0.002, lsfSimFront, 'r', 'LineWidth', 8);
+xlim([-0.06 0.06]); ylim([0 1]);
+box on; grid on; 
+legend('LSF@0.5m-Meas', 'LSF@0.5m-Sim', 'LSF@0.3m-Meas', 'LSF@0.3m-Sim');
+title('Focused @0.5m');
+xlabel('Pixel position'); ylabel('Relative intensity');
+%}
+
+
 %% Measurement: focus front
 % Back
 dngFileBack2 = fullfile('distance_1', 'focus_front', '0.2s_exp',...
@@ -114,10 +144,11 @@ ipWindow(ipMeasBack2);
 roiIntMeasBack2 = round(roiMeasBack2.Position);
 %}
 % roiIntMeasBack2 = [1835 1854 58 92];
-roiIntMeasBack2 = [1807 1795 65 96];
+roiIntMeasBack2 = [1924        2055         118         161];
+% roiIntMeasBack2 = [1807 1795 65 96];
 mtfDataMeasBack2 = cbMTFAnalysis(ipMeasBack2, roiIntMeasBack2, dx);
 filmHeightMeasBack2 = cbSensorLoc2FilmHeight(sensorMeasBack,...
-                                    [roiIntMeasBack(2), roiIntMeasBack(1)]);
+                                    [roiIntMeasBack2(2), roiIntMeasBack2(1)]);
 
 % Front
 dngFileFront2 = fullfile('distance_1', 'focus_front', '0.4s_exp',...
@@ -129,10 +160,10 @@ ipWindow(ipMeasFront2);
 roiIntMeasFront2 = round(roiMeasFront2.Position);
 %}
 % roiIntMeasFront2 = [2380 1883 66 111];
-roiIntMeasFront2 = [2380 1883 66 111]; % [2528 1578          43          65];
+roiIntMeasFront2 = [2515 1475 109 195]; %  [2380 1883 66 111]; 
 mtfDataMeasFront2 = cbMTFAnalysis(ipMeasFront2, roiIntMeasFront2, dx);
 filmHeightMeasFront2 = cbSensorLoc2FilmHeight(sensorMeasFront,...
-                                    [roiIntMeasFront(2), roiIntMeasFront(1)]);
+                                    [roiIntMeasFront2(2), roiIntMeasFront2(1)]);
 
 
 %% Simulation: Focus front
@@ -158,7 +189,7 @@ roiIntSimBack2 = round(roiSimBack2.Position);
 %}
 
 % roiIntSimBack = [1729 1665 72 145];
-roiIntSimBack2 = [1811 2055 70 153];
+roiIntSimBack2 = [1824 2025 70 183];
 mtfDataSimBack2 = cbMTFAnalysis(ipSim2, roiIntSimBack2, dx);
 filmHeightSimBack2 = cbSensorLoc2FilmHeight(sensorSim2,...
                                     [roiIntSimBack2(2), roiIntSimBack2(1)]);
@@ -175,19 +206,45 @@ filmHeightSimFront2 = cbSensorLoc2FilmHeight(sensorSim2,...
 %% Figure plot: focus front
 freqMeasBack2 = mtfDataMeasBack2.freq + 0.0001;
 mtfMeasBack2 = mtfDataMeasBack2.mtf(:,4);
+lsfxMeasBack2 = mtfDataMeasBack2.lsfx;
+lsfMeasBack2 = mtfDataMeasBack2.lsf;
 freqSimBack2 = mtfDataSimBack2.freq + 0.0001;
 mtfSimBack2 = mtfDataSimBack2.mtf(:,4);
+lsfxSimBack2 = mtfDataSimBack2.lsfx;
+lsfSimBack2 = mtfDataSimBack2.lsf;
 
 freqMeasFront2 = mtfDataMeasFront2.freq + 0.0001;
 mtfMeasFront2 = mtfDataMeasFront2.mtf(:,4);
+lsfxMeasFront2 = mtfDataMeasFront2.lsfx;
+lsfMeasFront2 = mtfDataMeasFront2.lsf;
 freqSimFront2 = mtfDataSimFront2.freq + 0.0001;
 mtfSimFront2 = mtfDataSimFront2.mtf(:,4);
+lsfxSimFront2 = mtfDataSimFront2.lsfx;
+lsfSimFront2 = mtfDataSimFront2.lsf;
 
 ieNewGraphWin; hold all; 
-plot(freqMeasBack2, mtfMeasBack2, '--k', 'LineWidth', 5);
-plot(freqSimBack2, mtfSimBack2, 'k', 'LineWidth', 5);
-plot(freqMeasFront2, mtfMeasFront2, '--r', 'LineWidth', 5);
-plot(freqSimFront2, mtfSimFront2, 'r', 'LineWidth', 5);
+plot(freqMeasBack2, mtfMeasBack2, ':k', 'LineWidth', 8);
+plot(freqSimBack2, mtfSimBack2, 'k', 'LineWidth', 8);
+plot(freqMeasFront2, mtfMeasFront2, ':r', 'LineWidth', 8);
+plot(freqSimFront2, mtfSimFront2, 'r', 'LineWidth', 8);
 box on; grid on;
 xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
 xlim([0 350]); ylim([0 1])
+legend('MTF@0.5m-Meas', 'MTF@0.5m-Sim', 'MTF@0.3m-Meas', 'MTF@0.3m-Sim');
+title('Focused @0.3m');
+
+% LSF
+% {
+ieNewGraphWin; hold all;
+plot(lsfxMeasBack2+0.0008, lsfMeasBack2, ':k', 'LineWidth', 8);
+plot(lsfxSimBack2-0.0010, lsfSimBack2, 'k', 'LineWidth', 8);
+plot(lsfxMeasFront2-0.0012, lsfMeasFront2, ':r', 'LineWidth', 8);
+plot(lsfxSimFront2+0.00175, lsfSimFront2, 'r', 'LineWidth', 8);
+box on; grid on;
+xlabel('Pixel position'); ylabel('Relative intensity');
+xlim([-0.06 0.06]); ylim([0 1])
+legend('LSF@0.5m-Meas', 'LSF@0.5m-Sim', 'LSF@0.3m-Meas', 'LSF@0.3m-Sim');
+title('Focused @0.3m');
+%}
+
+%% Get preview

@@ -6,4 +6,6 @@ barImage = reshape(barImage,r,c,3);
 
 % ISO12233(barImage, deltaX, weight, plotOptions)
 mtfData = ISO12233(barImage, sensorDx, [], 'all');
+lsfSmooth = smooth(mtfData.lsf);
+mtfData.lsf = lsfSmooth/max(lsfSmooth(:));
 end
