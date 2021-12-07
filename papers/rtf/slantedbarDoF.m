@@ -31,20 +31,24 @@ slantedBar = piAssetLoad(assetTreeName);
 piRecipeMerge(thisR, slantedBar.thisR, 'node name', slantedBar.mergeNode);
 
 scale = thisR.get('asset', slantedBar.mergeNode, 'scale');
-thisR.set('asset', slantedBar.mergeNode, 'scale', [0.08 0.1 0.01]);
-thisR.set('asset', slantedBar.mergeNode, 'world position', [0 0.05 0.10]);
+thisR.set('asset', slantedBar.mergeNode, 'scale', [0.08 0.13 0.01]*1.2);
+% thisR.set('asset', slantedBar.mergeNode, 'world rotate', [0 0 180]);
+
+thisR.set('asset', slantedBar.mergeNode, 'world position', [-0.04 0.08 0.10]);
 
 
 % Now get a copy of the slanted bar and place it on a different position
 [~, slantedBar2] = piObjectInstanceCreate(thisR, slantedBar.mergeNode);
 
-thisR.set('asset', slantedBar2, 'world position', [0.12 0.05 -0.10]);
-
+thisR.set('asset', slantedBar2, 'world position', [0.05 0.08 -0.10]);
+%{
+thisR.get('asset', slantedBar2, 'world position')
+%}
 %% Specify rendering settings
 % {
 % High resolution setting
 thisR.set('film resolution',[4032 3024]);
-nRaysPerPixel = 2048;
+nRaysPerPixel = 1024;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces', 2);
 thisR.set('fov', 77);
@@ -53,12 +57,12 @@ thisR.set('film diagonal', 7.056); % mm
 
 % Fast rendering setting
 %{
-thisR.set('film resolution',[4032 3024]/8);
+thisR.set('film resolution',[4032 3024]/16);
 nRaysPerPixel = 32;
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces', 2);
 thisR.set('fov', 77);
-thisR.set('film diagonal', 7.056*2/3); % mm
+thisR.set('film diagonal', 7.056); % mm
 %}
 
 %% Create lens
@@ -91,10 +95,11 @@ oiSet(oi, 'gamma', 0.5);
 %% Loop through film distances
 % filmdistance = 0.464135918+0.001; % in meters
 filmDistOri = 0.464135918 + 0.001; % in meters
-filmDistDelta = linspace(0, 0.2, 10); % 0:0.01:0.2;
-
-
-for ii=2:3%1:numel(filmDistDelta)
+% filmDistDelta = linspace(0, 0.2, 10); % 0:0.01:0.2;
+% filmDistDelta = [0.0242, 0.0272]; % Exporing focus back case
+% filmDistDelta = [0.0667 0.0889 0.1111]; % Exporing focus front case
+filmDistDelta = [0.0911 0.1011];
+for ii=1:numel(filmDistDelta)
     thisFilmDist = filmDistOri + filmDistDelta(ii);
     thisR.set('film distance', thisFilmDist/1000);
     piWrite(thisR);
