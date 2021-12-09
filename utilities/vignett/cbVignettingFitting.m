@@ -10,6 +10,13 @@ p.addParameter('channel', 'G', @ischar)
 p.parse(data, varargin{:});
 type = p.Results.type;
 channel = p.Results.channel;
+%% Preprocess to get rid of marglin if sending in sensor
+if isequal(type, 'sensor')
+    [hD, wD] = size(data);
+    % Take care of the margin
+    data = imcrop(data, [10 10 wD-21 hD-21]);
+    data = imresize(data, [hD, wD]);
+end
 %% Use matlab curve fitting toolbox
 % Downsample the data, as the lens shading should be smooth
 dataDownS = imresize(data,1/16);
@@ -20,8 +27,8 @@ dataDownS = double(dataDownS)/2^10;
 xNorm = ((1:w) - w/2)/(w/2); yNorm = ((1:h) - h/2)/(h/2);
 [xxNorm, yyNorm] = meshgrid(xNorm, yNorm);
 %
+[gx, gy] = gradient(dataDownS);
 if isequal(type, 'slope')
-    [~, gy] = gradient(dataDownS);
     switch channel 
         case 'G'
             excludedP = find(abs(gy)./dataDownS > 0.03);
@@ -30,7 +37,6 @@ if isequal(type, 'slope')
         case 'B'
             excludedP = find(abs(gy)./dataDownS > 0.03);
     end
-        
 else
     excludedP = [];
 end
@@ -45,6 +51,7 @@ d = reshape(sf([xxNorm(:), yyNorm(:)]), h, w);
 % Upsampling it back to original size
 dataUpS = imresize(d, size(data));
 dataUpSNorm = dataUpS/max(dataUpS(:));
+
 %{
 % Evaluation
 thisRow = uint8(linspace(1, size(data, 1), 20));

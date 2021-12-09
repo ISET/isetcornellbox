@@ -7,8 +7,8 @@ p.addParameter('measimgpath', '', @ischar);
 p.addParameter('illuscale', 0.5, @isnumeric);
 p.addParameter('noiseflag', 2, @isnumeric);
 p.addParameter('vignetting', 1, @isnumeric);
-p.addParameter('transcolorfilter', 1, @islogical);
-p.addParameter('usedemonoise', 0, @islogical);
+p.addParameter('transcolorfilter', true, @islogical);
+p.addParameter('usedemonoise', false, @islogical);
 p.parse(oi, varargin{:});
 
 measImgPath = p.Results.measimgpath;

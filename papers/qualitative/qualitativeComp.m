@@ -9,9 +9,9 @@ if ~piDockerExists, piDockerConfig; end
 % vignetting = tmp.pixel4aLensVignetSlope;
 %% Basic parameter initialization
 
-resolution = [252 189] * 16;
-nRaysPerPixel = 2048;
-nBounces = 8;
+resolution = [252 189]; % * 16;
+nRaysPerPixel = 256; % 2048;
+nBounces = 3; %8;
 measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos');
 
 %% Center
@@ -20,8 +20,12 @@ from = [0 0.10 -0.39];
 to = [0 0.125, 0.6];
                                   
 measCenerImgPath = fullfile(measPos1Path, 'center', 'selected', 'IMG_20210130_111914.dng');
-[sensor, info] = sensorDNGRead(measCenerImgPath);
-
+[sensor, info, ipMeasCenter] = cbDNGRead(measCenerImgPath, 'demosaic', true);
+%{
+ipWindow(ipMeasCenter);
+imgMeasCenter = ipGet(ipMeasCenter, 'srgb');
+ieNewGraphWin; imagesc(imgMeasCenter);
+%}
 label = 'Center';
 
 oiCtr = cbOISim('from', from,...
@@ -30,7 +34,7 @@ oiCtr = cbOISim('from', from,...
                 'n rays per pixel', nRaysPerPixel,... 
                 'nbounces', nBounces,...
                 'label', label);
-% oiWindow(oiTmpCenter); oiSet(oiTmpCenter, 'gamma', 0.5);
+% oiWindow(oiCtr); oiSet(oiCtr, 'gamma', 0.5);
 
 [prevImgSimCtr, prevImgMeasCtr, sensorSimCtr,...
     sensorMeasCtr, ~, ipSimCtr, ipMeasCtr] = cbSensorSim(oiCtr, 'meas img path', measCenerImgPath,...
