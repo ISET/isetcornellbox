@@ -9,14 +9,14 @@ if ~piDockerExists, piDockerConfig; end
 % vignetting = tmp.pixel4aLensVignetSlope;
 %% Basic parameter initialization
 
-resolution = [252 189]; % * 16;
-nRaysPerPixel = 256; % 2048;
-nBounces = 3; %8;
+resolution = [252 189] * 16;
+nRaysPerPixel = 512 * 5; % 2048;
+nBounces = 6;
 measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos');
 
 %% Center
 
-from = [0 0.10 -0.39];
+from = [0 0.10 -0.385];
 to = [0 0.125, 0.6];
                                   
 measCenerImgPath = fullfile(measPos1Path, 'center', 'selected', 'IMG_20210130_111914.dng');
@@ -33,12 +33,13 @@ oiCtr = cbOISim('from', from,...
                 'resolution', resolution,...
                 'n rays per pixel', nRaysPerPixel,... 
                 'nbounces', nBounces,...
-                'label', label);
+                'label', label,...
+                'filmdistance', 0.49234);
 % oiWindow(oiCtr); oiSet(oiCtr, 'gamma', 0.5);
 
 [prevImgSimCtr, prevImgMeasCtr, sensorSimCtr,...
     sensorMeasCtr, ~, ipSimCtr, ipMeasCtr] = cbSensorSim(oiCtr, 'meas img path', measCenerImgPath,...
-                                                'illuscale', 0.6,...
+                                                'illuscale', 0.52,...
                                                 'noise flag', 2,...
                                                 'vignetting', []);
 %{
@@ -50,8 +51,9 @@ ieNewGraphWin;
 subplot(1, 2, 1); imshow(prevImgSimCtr);
 subplot(1, 2, 2); imshow(prevImgMeasCtr);
 
+% Save
 qualSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'qualitative');
-noiseSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'noise');
+noiseSaveDirPath = fullfile(cboxRootPath, 'local', 'figures', 'qualitative');
 if ~exist(qualSaveDirPath, 'dir')
     mkdir(qualSaveDirPath);
 end

@@ -5,7 +5,7 @@ ieInit;
 
 %%
 sensorDir = fullfile(cboxRootPath, 'local',...
-                    'figures', 'noise');
+                    'figures', 'qualitative');
 %%
 % Measurement
 sensorMeasPath = fullfile(sensorDir, 'sensorMeasCtr.mat');
@@ -17,7 +17,7 @@ load(sensorSimPath, 'sensorSimCtr');
 
 %% Parameter initialization
 nROI = 100;
-width = 15; height = 15;
+width = 10; height = 10;
 %% Simulation
 
 roiSelectsSim = cbSensorUniformROISample(sensorSimCtr,...
@@ -101,14 +101,16 @@ end
 % Measurement
 plot(meanMeas, stdMeas, 'bo');
 % Simulation
-plot(meanSim, stdSim, 'r*');
+plot(meanSim, stdSim, 'rx');
 legend('Measured', 'Simulated')
 ylabel('Standard deviation (dv)'); xlabel('Mean value (dv)');
 axis square; box on; grid on; ylim([0 20])
 
+%{
 d = polyfit(stdMeas, meanMeas, 2);
 meanPred = polyval(d,stdMeas);
 plot(stdMeas, meanPred,'g-');
+%}
 
 %% Draw the ROI comparison (old thoughts)
 %{

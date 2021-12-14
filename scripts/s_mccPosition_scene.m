@@ -56,7 +56,7 @@ T2 = thisR.set('asset', rootST1.name, 'world translate', [-0.115 0 0]);
 piWrite(thisR);
 % Render
 [scene, result] = piRender(thisR, 'render type', 'radiance', 'scale illuminance', false);
-sceneName = 'CBLens_MCC_left_HQ_scene_correct';0dilw
+sceneName = 'CBLens_MCC_left_HQ_scene_correct';
 scene = oiSet(scene, 'name', sceneName);
 sceneWindow(scene);
 sceneSet(scene, 'gamma', 0.5);

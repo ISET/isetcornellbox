@@ -43,7 +43,7 @@ polyVal = d(valInd);
 mseFlat = sqrt(sum((patch(valInd) - flatSurface).^2));
 msePoly = sqrt(sum((patch(valInd) - polyVal).^2));
 
-if mseFlat <= msePoly * 1.10 % Give some tolerance
+if mseFlat <= msePoly * 1.02 &&  % Give some tolerance
     res = true;
 else
     res = false;

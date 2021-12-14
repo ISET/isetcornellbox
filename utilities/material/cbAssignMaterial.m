@@ -33,15 +33,31 @@ if ~isequal(numel(wave), numel(refl))
 end
 
 %%
-if isequal(mat, 'ShieldMat')
-    curReflSPD = piMaterialCreateSPD(wave, refl);
-    thisR.set('material', mat, 'kd value', curReflSPD);
-else
-    % Create PBRT format of reflectance
-    curReflSPD = piMaterialCreateSPD(wave, refl);
-    newMat = piMaterialCreate(mat, 'type', 'matte', 'kd value', curReflSPD);
-    thisR.set('material', mat, newMat);
+curKdSPD = piMaterialCreateSPD(wave, refl);
+
+switch ieParamFormat(mat)
+    case {'cubelarge', 'cubesmall'}
+        curKsSPD = 0.5 * piMaterialCreateSPD(wave, refl);
+        newMat = piMaterialCreate(mat, 'type', 'uber',...
+                        'kr value', curKsSPD,...
+                        'kd value', curKdSPD);
+    case {'leftwall', 'rightwall'}
+        curKsSPD = 0.1 * piMaterialCreateSPD(wave, refl);
+        newMat = piMaterialCreate(mat, 'type', 'uber',...
+            'ks value', curKsSPD,...
+            'kd value', curKdSPD);
+    case {'bunnymat'}
+        curKsSPD = 0.01 * piMaterialCreateSPD(wave, refl);
+        newMat = piMaterialCreate(mat, 'type', 'uber',...
+                        'kr value', curKsSPD,...
+                        'kd value', curKdSPD);
+    case {'shieldmat'}
+        newMat = piMaterialCreate(mat, 'type', 'matte', 'kd value', curKdSPD);
+    otherwise
+        newMat = piMaterialCreate(mat, 'type', 'matte', 'kd value', curKdSPD);
 end
+
+thisR.set('material', mat, newMat);
 
 % Print info
 fprintf('Assigned reflectance to: %s\n', mat);

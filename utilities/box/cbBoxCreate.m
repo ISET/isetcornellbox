@@ -36,7 +36,9 @@ thisR.set('asset', assetName, 'world translate', [0 -0.005 0]);
 thisR.set('asset', assetName, 'obj2light', areaLight);
 
 assetNameCube = '001_CubeLarge_O';
-thisR.set('asset', assetNameCube, 'scale', [1 1.2 1]);
+thisR.set('asset', assetNameCube, 'world translate', [0.005 0 0]);
+thisR.set('asset', assetNameCube, 'world rotate', [0 -3 0]);
+thisR.set('asset', assetNameCube, 'scale', [1 1 1]);
 %{
 wave = 400:10:700;
 lgt = ieReadSpectra(lightName, wave);

@@ -12,6 +12,10 @@ p.addParameter('label', 'CornellBox', @ischar);
 p.addParameter('lenstype', 'raytransfer', @ischar);
 p.addParameter('lensfile', fullfile(cboxRootPath, 'data', 'lens', 'pixel4a-rearcamera-ellipse-raytransfer.json'), @ischar);
 p.addParameter('filmdistance', 0.464135918+0.001, @isnumeric);
+p.addParameter('removecube', false, @islogical);
+p.addParameter('addmcc', true, @islogical);
+p.addParameter('addbunny', true, @islogical);
+p.addParameter('mcctrans', [], @isnumeric);
 p.parse(varargin{:});
 
 from = p.Results.from;
@@ -25,6 +29,12 @@ lensType = p.Results.lenstype;
 lensFile = p.Results.lensfile;
 
 filmDistance_mm = p.Results.filmdistance;
+
+% Asset settings
+removeCube = p.Results.removecube;
+addMCC = p.Results.addmcc;
+addBunny = p.Results.addbunny;
+mccTrans = p.Results.mcctrans;
 %% Create Cornell Box recipe
 thisR = cbBoxCreate('from', from, 'to', to);
 %{
@@ -39,7 +49,13 @@ newTo = newFrom + [0 0 1]; % The camera is horizontal
 thisR.set('to', newTo);
 %}
 
+if removeCube
+    % Remove cubes
+    thisR.set('assets', 'CubeSmall_B', 'chop');
+    thisR.set('assets', 'CubeLarge_B', 'chop');
+end
 %% Add MCC
+if addMCC
 %{
 assetTreeName = 'mccCB';
 [~, rootST1] = thisR.set('asset', 'root', 'graft with materials', assetTreeName);
@@ -50,10 +66,15 @@ assetTreeNameMCC = 'mccCB';
 mccCB = piAssetLoad(assetTreeNameMCC);
 piRecipeMerge(thisR, mccCB.thisR, 'node name', mccCB.mergeNode);
 thisR.set('asset', 'MCC_B', 'world position', [0 0.035,0.125]);
-thisR.set('asset', 'MCC_B', 'world rotation', [0 0 2]);
+thisR.set('asset', 'MCC_B', 'world rotation', [0 0 1]);
 
+if ~isempty(mccTrans)
+    thisR.set('asset', 'MCC_B', 'world translate', mccTrans);
+end
+end
 
 %% Add bunny
+if addBunny
 assetTreeNameBunny = 'bunny';
 
 bunnychart = piAssetLoad(assetTreeNameBunny);
@@ -66,18 +87,19 @@ refl = ieReadSpectra('cboxSurfaces', wave);
 wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 
-thisR.set('asset', '001_Bunny_O', 'world position', [0.095 0.059 0]);
-thisR.set('asset', '001_Bunny_O', 'scale', 1.4);
-% thisR.set('asset', bunnychart.mergeNode, 'world rotate', [0 -35 0]);
+thisR.set('asset', '001_Bunny_O', 'world position', [0.098 0.058 0]);
+thisR.set('asset', '001_Bunny_O', 'scale', 1.42);
+thisR.set('asset', bunnychart.mergeNode, 'world rotate', [0 3 0]);
 % thisR.assets.show
 %}
+end
 %% Specify rendering settings
 thisR.set('film resolution',resolution);
 thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',nBounces);
 thisR.set('fov', 84);
 thisR.set('film diagonal', 7.056);
-
+thisR.set('sampler subtype', 'sobol');
 %% Add RTF lens
 % lensFile = fullfile(cboxRootPath, 'data', 'lens', 'pixel4a-rearcamera-ellipse-raytransfer.json');
 cameraRTF = piCameraCreate(lensType,'lensfile',lensFile);

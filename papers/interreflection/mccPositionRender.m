@@ -1,0 +1,229 @@
+%% Compute interreflection
+
+%%
+ieInit;
+if ~piDockerExists, piDockerConfig; end
+
+
+%% Load real measured data
+measPath = fullfile(cboxRootPath, 'local', 'measurement', 'mccpos');
+% Middle
+dngMiddle = 'IMG_20210105_163525.dng';
+[sensorMMeas, infoMMeas, ipMMeas] = cbDNGRead(fullfile(measPath, 'middle',dngMiddle), 'demosaic', true);
+
+% Left
+dngLeft = 'IMG_20210105_163902.dng';
+[sensorLMeas, infoLMeas, ipLMeas] = cbDNGRead(fullfile(measPath, 'left', dngLeft), 'demosaic', true);
+
+% Right
+dngRight = 'IMG_20210105_164410.dng';
+[sensorRMeas, infoRMeas, ipRMeas] = cbDNGRead(fullfile(measPath, 'right', dngRight), 'demosaic', true);
+
+% Crop
+% Left
+%{
+sensorWindow(sensorLMeas);
+[roiLocs,roi] = ieROISelect(sensorLMeas);
+rectLMeas = round(roi.Position);
+%}
+rectLMeas = [1066        1787         530         388];
+sensorLMeasCrp = sensorCrop(sensorLMeas, rectLMeas);
+% sensorWindow(sensorLMeasCrp);
+
+% Mid
+%{
+sensorWindow(sensorMMeas);
+[roiLocs,roi] = ieROISelect(sensorMMeas);
+rectMMeas = round(roi.Position);
+%}
+rectMMeas = [1828        1824         480         323];
+sensorMMeasCrp = sensorCrop(sensorMMeas, rectMMeas);
+% sensorWindow(sensorMMeasCrp);
+
+% Right
+%{
+sensorWindow(sensorRMeas);
+[roiLocs,roi] = ieROISelect(sensorRMeas);
+rectRMeas = round(roi.Position);
+%}
+rectRMeas = [2406        1823         488         322];
+sensorRMeasCrp = sensorCrop(sensorRMeas, rectRMeas);
+% sensorWindow(sensorRMeasCrp);
+%%
+oiSavePath = fullfile(cboxRootPath, 'local', 'simulation', 'mcc_pos', 'oi');
+%% Basic parameter initialization
+from = [0 0.10 -0.385];
+to = [0 0.125, 0.6];
+
+%% Section I: MCC left
+resolution = [252 189] * 16;
+nRaysPerPixel = 2048;
+nBounces = 8;
+
+label = 'Left';
+oiMCCLeft = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'nbounces', nBounces,...
+                'label', label,...
+                'filmdistance', 0.49234,...
+                'remove cube', true,...
+                'add bunny', false,...
+                'add mcc', true,...
+                'mcc trans', [-0.1 0 0]);
+
+%{
+oiWindow(oiMCCLeft); oiSet(oiMCCLeft, 'gamma', 0.5);
+%}
+meanIlluLeft = oiGet(oiMCCLeft, 'mean illuminance');
+oiMCCLeftAdj = oiSet(oiMCCLeft, 'mean illuminance', meanIlluLeft * 0.6131);
+
+oiLeftSavePath = fullfile(oiSavePath, sprintf('oiMCCLeft_%sbounces.mat', num2str(nBounces)));
+save(oiLeftSavePath, 'oiMCCLeft');
+%% Select region
+sensorLSim = sensorLMeas;
+sensorLSim = cbSensorCompute(sensorLSim, oiMCCLeftAdj);
+%{
+sensorWindow(sensorLSim);
+[roiLocs,roi] = ieROISelect(sensorLSim);
+rectLSim = round(roi.Position);
+%}
+rectLSim = [1121        1822         537         351];
+sensorLSimCrp = sensorCrop(sensorLSim, rectLSim);
+
+%{
+ipLSim = cbIpCompute(sensorLSim);
+ipWindow(ipLSim);
+%}
+
+%% Analyze the result (Left)
+hLineLMeas = 319;
+lMeasData = sensorPlot(sensorLMeasCrp, 'dv hline', [1 hLineLMeas], 'two lines', true);
+
+hLineMSim = 328;
+lSimData = sensorPlot(sensorLSimCrp, 'dv hline', [1 hLineMSim], 'two lines', true);
+
+patternMeas = lMeasData.pixColor; patternSim = lSimData.pixColor;
+t = 'Left';
+cbPlotSensorData(lSimData, lMeasData, t, patternSim, patternMeas);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [2 4 6 8 1 3 5 7 ];
+legend(plots(neworder), labels(neworder));
+xlim([-375 350]); ylim([50 300]);
+xticks([-300:100:300])
+%% Section II: Middle
+resolution = [252 189]*16;
+nRaysPerPixel = 2048;
+nBounces = 8;
+
+label = 'Left';
+oiMCCMid = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'nbounces', nBounces,...
+                'label', label,...
+                'filmdistance', 0.49234,...
+                'remove cube', true,...
+                'add bunny', false,...
+                'add mcc', true);
+
+%{
+oiWindow(oiMCCMid); oiSet(oiMCCMid, 'gamma', 0.5);
+%}
+meanIlluMid = oiGet(oiMCCMid, 'mean illuminance');
+oiMCCMidAdj = oiSet(oiMCCMid, 'mean illuminance', meanIlluMid * 0.7396);
+
+oiMidSavePath = fullfile(oiSavePath,  sprintf('oiMCCMid_%sbounces.mat', num2str(nBounces)));
+save(oiMidSavePath, 'oiMCCMid');
+
+%% Select region
+sensorMSim = sensorMMeas;
+sensorMSim = cbSensorCompute(sensorMSim, oiMCCMidAdj);
+%{
+sensorWindow(sensorMSim);
+[roiLocs,roi] = ieROISelect(sensorMSim);
+rectMSim = round(roi.Position);
+%}
+rectMSim = [1756        1825         527         360];
+sensorMSimCrp = sensorCrop(sensorMSim, rectMSim);
+% sensorWindow(sensorMSimCrp);
+%{
+ipMSim = cbIpCompute(sensorMSim);
+ipWindow(ipMSim);
+%}
+
+%% Analyze the result (Mid)
+hLineMMeas = 287;
+mMeasData = sensorPlot(sensorMMeasCrp, 'dv hline', [1 hLineMMeas], 'two lines', true);
+
+hLineMSim = 328;
+mSimData = sensorPlot(sensorMSimCrp, 'dv hline', [1 hLineMSim], 'two lines', true);
+
+patternMeas = mMeasData.pixColor; patternSim = mSimData.pixColor;
+t = 'Middle';
+cbPlotSensorData(mSimData, mMeasData, t, patternSim, patternMeas);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [2 4 6 8 1 3 5 7 ];
+legend(plots(neworder), labels(neworder))
+xticks([-300:100:300])
+%% Section III: Right
+resolution = [252 189] * 16;
+nRaysPerPixel = 2048;
+nBounces = 8;
+
+label = 'Right';
+oiMCCRight = cbOISim('from', from,...
+                'to', to,...
+                'resolution', resolution,...
+                'n rays per pixel', nRaysPerPixel,... 
+                'nbounces', nBounces,...
+                'label', label,...
+                'filmdistance', 0.49234,...
+                'remove cube', true,...
+                'add bunny', false,...
+                'add mcc', true,...
+                'mcc trans', [0.1 0 0]);
+
+%{
+oiWindow(oiMCCRight); oiSet(oiMCCRight, 'gamma', 0.5);
+%}
+meanIlluRight = oiGet(oiMCCRight, 'mean illuminance');
+oiMCCRightAdj = oiSet(oiMCCRight, 'mean illuminance', meanIlluRight * 0.7183);
+
+oiRightSavePath = fullfile(oiSavePath,  sprintf('oiMCCRight_%sbounces.mat', num2str(nBounces)));
+save(oiRightSavePath, 'oiMCCRight');
+%% Select region
+sensorRSim = sensorRMeas;
+sensorRSim = cbSensorCompute(sensorRSim, oiMCCRightAdj);
+%{
+sensorWindow(sensorRSim);
+[roiRocs,roi] = ieROISelect(sensorRSim);
+rectRSim = round(roi.Position);
+%}
+rectRSim = [2373        1823         542         358];
+sensorRSimCrp = sensorCrop(sensorRSim, rectRSim);
+
+%{
+ipLSim = cbIpCompute(sensorLSim);
+ipWindow(ipLSim);
+%}
+
+%% Analyze the result (Left)
+hLineRMeas = 280;
+rMeasData = sensorPlot(sensorRMeasCrp, 'dv hline', [1 hLineRMeas], 'two lines', true);
+
+hLineRSim = 328;
+rSimData = sensorPlot(sensorRSimCrp, 'dv hline', [1 hLineRSim], 'two lines', true);
+
+patternMeas = rMeasData.pixColor; patternSim = rSimData.pixColor;
+t = 'Right';
+cbPlotSensorData(rSimData, rMeasData, t, patternSim, patternMeas);
+labels = get(legend(), 'String');
+plots = flipud(get(gca, 'children'));
+neworder = [2 4 6 8 1 3 5 7 ];
+legend(plots(neworder), labels(neworder))
+xticks([-300:100:300])
