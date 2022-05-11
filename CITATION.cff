@@ -1,0 +1,8 @@
+@software{Lisa_My_Research_Software_2017,
+  author = {Zheng Lyu, Thomas Goossens, Joyce Farrell, Brian Wandell},
+  month = {05},
+  title = {{ISETcornellbox}},
+  url = {https://github.com/github/linguist},
+  version = {1.0},
+  year = {2022}
+}
