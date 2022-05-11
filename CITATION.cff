@@ -1,8 +1,18 @@
-@software{Lisa_My_Research_Software_2017,
-  author = {Zheng Lyu, Thomas Goossens, Joyce Farrell, Brian Wandell},
-  month = {05},
-  title = {{ISETcornellbox}},
-  url = {https://github.com/github/linguist},
-  version = {1.0},
-  year = {2022}
-}
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Lyu"
+  given-names: "Zheng""
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Thomas"
+  given-names: "Goossens"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+- family-names: "Farrell"
+  given-names: "Joyce"
+- family-names: "Wandell"
+  given-names: "Brian"
+
+title: "ISETcornellbox"
+version: 1.0
+date-released: 2022-05-11
+url: "https://github.com/ISET/isetcornellbox"
