@@ -1,0 +1,27 @@
+function [stdMedian, coverList, meanMedian,indexBin] = cbSensorNoiseAnalysis(meanData, stdData, edges)
+
+[counts, ~, bins] = histcounts(meanData, edges);
+% Indicies in each bin
+valididx = reshape(find(bins), [], 1);
+indexBin = accumarray( reshape(bins(valididx), [], 1), valididx, [], @(V){V.'});
+
+stdMedian = zeros(1, numel(edges));
+meanMedian = zeros(1, numel(edges));
+coverList = zeros(2, numel(edges)); % Coverage
+
+for ii=1:numel(edges)
+    if ii>numel(indexBin) || isempty(indexBin{ii})
+        continue;
+    end
+    thisMeanList = meanData(indexBin{ii});
+    thisStdList = stdData(indexBin{ii});
+    stdMedian(ii) = median(thisStdList);
+    meanMedian(ii) = thisMeanList(thisStdList == stdMedian())
+    % Calculate 90% coverage
+    stdSorted = sort(thisStdList);
+    beginInd = floor(numel(stdSorted)*0.05) + 1;
+    endInd = ceil(numel(stdSorted)*0.95);
+    coverList(1,ii) = stdSorted(beginInd);
+    coverList(2, ii)= stdSorted(endInd);
+end
+end

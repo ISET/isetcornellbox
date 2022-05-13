@@ -15,10 +15,16 @@ end
 %%
 sensor = sensorSet(sensor, 'roi', roi);
 dv = sensorGet(sensor, 'roi dv');
+blkLvl = sensorGet(sensor, 'blacklevel');
 
+% Get conversion gain
+vSwing = sensorGet(sensor, 'pixel voltage swing');
+electron2dv = sensorGet(sensor, 'analoggain')*...
+    (sensorGet(sensor, 'pixel conversion gain') * 1024/vSwing);
+dv2electron = 1/electron2dv;
 % Get the green channel
-dvG = dv(:,2);
+dvG = dv(:,2)-blkLvl;
 dvG = dvG(~isnan(dvG));
 dvG = reshape(dvG, (roi(4) + 1), (roi(3) + 1)/2);
-res = isUniformPatch(dvG);
+res = isUniformPatch(dvG, dv2electron);
 end

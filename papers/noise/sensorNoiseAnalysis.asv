@@ -114,14 +114,13 @@ end
 % Measurement
 p1 = plot(meanMeas, stdMeas, 'o');
 p1.MarkerEdgeColor = [0 0.4470 0.7410];
-p1.MarkerSize = 8;
+p1.MarKerSize = 5;
 % Simulation
 p2 = plot(meanSim, stdSim, 'o');
 p2.MarkerEdgeColor = [0.8500 0.3250 0.0980];
-p2.MarkerSize = 8;
+p1.MarKerSize = 5;
 
-l = legend('Measured', 'Simulated');
-l.FontSize = 10;
+legend('Measured', 'Simulated')
 ylabel('Standard deviation (dv)'); xlabel('Mean value (dv)');
 axis square; box on; grid on; ylim([0 20]); xlim([0 800]);
 

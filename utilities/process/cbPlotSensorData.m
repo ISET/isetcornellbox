@@ -20,7 +20,7 @@ plot(D1.x,D1.y, 'Color', colors1{pattern1(ii)}, 'LineStyle', lStyleS, 'LineWidth
 plot(pM(1)*(D2.x - pM(2)), D2.y, 'Color', colors2{pattern1(ii)}, 'Marker', lStyleR, 'LineStyle', 'None',...
                  'LineWidth', 2, 'MarkerSize', 8);
 ylabel('Digital value');
-xlabel('Position (um)');
+xlabel('Pixel position (um)');
 end
 grid on; box on;
 title(t)

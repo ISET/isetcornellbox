@@ -9,8 +9,8 @@ if ~piDockerExists, piDockerConfig; end
 % vignetting = tmp.pixel4aLensVignetSlope;
 %% Basic parameter initialization
 
-resolution = [252 189]*16;
-nRaysPerPixel = 512*6; % 2048;
+resolution = [252 189] * 16;
+nRaysPerPixel = 256; % 2048;
 nBounces = 6;
 measPos1Path = fullfile(cboxRootPath, 'local', 'measurement', 'camerapos');
 
@@ -39,7 +39,7 @@ oiCtr = cbOISim('from', from,...
 
 [prevImgSimCtr, prevImgMeasCtr, sensorSimCtr,...
     sensorMeasCtr, ~, ipSimCtr, ipMeasCtr] = cbSensorSim(oiCtr, 'meas img path', measCenerImgPath,...
-                                                'illuscale', 0.57,...
+                                                'illuscale', 0.55,...
                                                 'noise flag', 2,...
                                                 'vignetting', []);
 %{
@@ -107,8 +107,8 @@ save(fullfile(noiseSaveDirPath, sensorMeasCtrName), 'sensorMeasCtr');
 
 %% left
 %{
-resolution = [252 189] * 4;
-nRaysPerPixel = 64;
+resolution = [252 189] * 16;
+nRaysPerPixel = 512 * 6;
 nBounces = 6;
 %}
 from = [-0.115 0.105 -0.405];

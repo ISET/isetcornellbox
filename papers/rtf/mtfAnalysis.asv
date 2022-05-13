@@ -183,18 +183,14 @@ sensorSim2 = cbSensorCompute(sensorSim2, oiSlantedBarAdj2);
 ipSim2 = cbIpCompute(sensorSim2);
 
 %{
-% For paper illustration
-sensorSim2 = cbSensorCompute(sensorSim2, oiSlantedBar);
-ipSim2 = cbIpCompute(sensorSim2);
-ipWindow(ipSim2);
-%}
-
-%{
 ipWindow(ipSim2);
 [roiLocs,roiSimBack2] = ieROISelect(ipSim2);
 roiIntSimBack2 = round(roiSimBack2.Position);
 %}
-
+%{
+% For paper illustration
+sensorSim2 = cbSensorCompute(sensorSim2)
+%}
 
 % roiIntSimBack = [1729 1665 72 145];
 roiIntSimBack2 = [1824 2025 70 183];

@@ -46,6 +46,7 @@ if ~isempty(cornerPoint)
     cornerPoint(:,2) = cornerPoint(:,2) - cornerPoint(4, 2) + 1;
     
     [rgbMean, rects] = cbMccRGBMean(sensor, cornerPoint, blackBorder);
+    rgbMean = rgbMean - sensorGet(sensor,'black level');
     %{
         sensorWindow(sensor);
         chartRectsDraw(sensor,rects);  % Visualize the rectangles

@@ -24,17 +24,12 @@ p.parse(patch, dv2electron, varargin{:});
 patch = p.Results.patch;
 dv2electron = p.Results.dv2electron;
 
-%%
-if mean(patch(:)) <= 2 || mean(patch(:))>1020
-    res = false;
-    return;
-end
 %% First check:
 patchMedian = median(patch(:));
 patchEMedian = patchMedian * dv2electron;
 patchEStd = sqrt(patchEMedian);
 patchDvStd = patchEStd /dv2electron; % Convert it back to dv
-if any(abs(patch - patchMedian)>3 * patchDvStd, 'all')
+if any(abs(patch - patchMedian)>3 * patchDvStd)
     res = false;
     return;
 end
@@ -55,17 +50,13 @@ d = reshape(polySurface([xxNorm(:), yyNorm(:)]), h, w);
 % ieNewGraphWin; plot(polySurface, [xxNorm(:), yyNorm(:)], patch(:));
 polyVal = d(valInd);
 
-%% Compute the RMSE and decide
+%% Compute the MSE and decide
 mseFlat = sqrt(sum((patch(valInd) - flatSurface).^2));
 msePoly = sqrt(sum((patch(valInd) - polyVal).^2));
 
-if mseFlat <= msePoly * 1.02 % && maxDif <= 2.5 * std(patch(patch<min(maxk(patch(:), 5))))% Give some tolerance
+if mseFlat <= msePoly * 1.05 % && maxDif <= 2.5 * std(patch(patch<min(maxk(patch(:), 5))))% Give some tolerance
     res = true;
-    %{
-    if std(patch(:)) > 8 && mean(patch(:)) < 300
-        a = 1;
-    end
-    %}
+    if std(patch(:))
 else
     res = false;
 end

@@ -209,18 +209,7 @@ identityLine; grid on; axis square; box on;
 xlabel('Measurement (dv)'); ylabel('Simulation (dv)');
 
 %% Step B: add color filter correction
-tmpA = repmat(rgbMeanACor, [8,1]);
-tmpDay = repmat(rgbMeanDayCor, [8,1]);
-tmpCWF = repmat(rgbMeanCWFCor, [8, 1]);
-rgbMeanSimCorRep = [tmpA; tmpCWF; tmpDay];
-% Figure: color correction, no vignetting or BRDF correction
-ieNewGraphWin;
-hold all
-plot(rgbMeanMeas8PosNoVig(:,1)+ blkLvl, rgbMeanSimCorRep(:,1)+ blkLvl, 'ro');
-plot(rgbMeanMeas8PosNoVig(:,2)+ blkLvl, rgbMeanSimCorRep(:,2)+ blkLvl, 'go');
-plot(rgbMeanMeas8PosNoVig(:,3)+ blkLvl, rgbMeanSimCorRep(:,3)+ blkLvl, 'bo');
-identityLine; grid on; axis square; box on
-xlabel('Measurement (dv)'); ylabel('Simulation (dv)');
+90=.acgklmnrw
 
 %% Step C: add lens vignetting correction
 % Add lens vignetting correction
@@ -267,11 +256,10 @@ identityLine; grid on; axis square; box on
 xlabel('Measurement (dv)'); ylabel('Simulation (dv)');
 
 %% Step D+: hist
-edges = [60:20:1000];
-%{
+edges = 0:100:1000;
 ieNewGraphWin;
 hold all;
-histogram(rgbMeanMeas8PosVig(:), edges, 'FaceColor', [0 0.4470 0.7410],...
+histogram(rgbMeanMeas8PosVigBRDF(:), edges, 'FaceColor', [0 0.4470 0.7410],...
                                     'FaceAlpha', 0.4,...
                                     'LineWidth', 3);
 histogram(rgbMeanSimCorRep(:), edges, 'FaceColor', [0.8500 0.3250 0.0980],...
@@ -284,22 +272,21 @@ xlim([0 1000]); xticks(0:200:1000);
 legend('Measured', 'Simulated');
 % Save hist path
 saveHistPath = fullfile(cboxRootPath, 'local', 'data', 'hist.mat');
-rgbMeanMeas = rgbMeanMeas8PosVig;
+rgbMeanMeas = rgbMeanMeas8PosVigBRDF;
 rgbMeanSim = rgbMeanSimCorRep;
 bins = edges;
 save(saveHistPath, 'rgbMeanMeas', 'rgbMeanSim', 'bins');
-%}
 
 ieNewGraphWin;
 nBins = 30; alpha = 0.5;
-hMeas = histogram(rgbMeanMeas(:),edges);
+hMeas = histogram(rgbMeanMeas(:),nBins);
 hMeas.FaceColor = [0.8 0.1 0.2];
 hMeas.FaceAlpha = alpha;
 hMeas.EdgeColor = hMeas.FaceColor;
 hMeas.EdgeAlpha = hMeas.FaceAlpha;
 hold on;
 
-hSim = histogram(rgbMeanSim(:),edges);
+hSim = histogram(rgbMeanSim(:),nBins);
 hSim.FaceColor = [0.1 0.3 0.7];
 hSim.FaceAlpha = alpha;
 hSim.EdgeColor = hSim.FaceColor;

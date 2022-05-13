@@ -69,41 +69,19 @@ fprintf('Relative error: %.4f percent \n', abs(estCG-assumedCG)/assumedCG*100);
 
 ieNewGraphWin; 
 hold all;
-% Measured data
+% 
 histogram(cropSensorImgs(:), 50, 'BinLimits', [300 360],...
                 'facecolor', [0 0.4470 0.7410],...
                 'edgecolor', 'none');
-% Poisson distribution in dv space
-poisDV = poissrnd(mean(cropSensorImgs(:)), size(cropSensorImgs(:)));
-hDV = histfit(poisDV);
-hDV(2).Color = [0.5 0.5 0.5];
-hDV(2).LineStyle = ':';
-hDV(2).LineWidth = 4;
-delete(hDV(1));
-grid on; box on; xlabel('Digital value'); ylabel('Number');
-xticks(260:20:400); xlim([260 400]);
-legend('Digital value', 'Poisson distribution');
+grid on; box on; xlabel('Digital value'); ylabel('Counts');
+xticks(300:20:360); xlim([300 360])
 
 ieNewGraphWin;
-hold all;
-% Measured data
 histogram(cropSensorImgs(:)/estCG, 50, 'BinLimits', uint32([300 360]/estCG/10)*10,...
                 'facecolor', [0.8500 0.3250 0.0980],...
                 'edgecolor', 'none');
-% Poisson distribution in electron space
-% Poisson distribution in dv space
-poisE = poissrnd(mean(cropSensorImgs(:)/estCG), size(cropSensorImgs(:)));
-hE = histfit(poisE);
-hE(2).Color = [0.5 0.5 0.5];
-hE(2).LineStyle = ':';
-hE(2).LineWidth = 4;
-delete(hE(1));
-grid on; xlabel('# of electrons'); box on; ylabel('Number');
-xticks(1750:150:2200); xlim([1750 2200]);
-legend('# of electrons', 'Poisson distribution');
-
-
-
+grid on; xlabel('# of electrons'); box on; ylabel('Counts');
+xticks(1750:150:2200); xlim([1750 2200])
 % Bar
 ieNewGraphWin;
 X = categorical({'Estimated', 'Nominal'});

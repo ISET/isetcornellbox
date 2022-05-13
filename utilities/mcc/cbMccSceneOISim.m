@@ -24,6 +24,7 @@ scene = sceneSet(scene, 'name', illuminant);
 
 % oi - skip all lens vignetting effects
 oi = oiCreate('default');
+oi = oiSet(oi, 'bitdepth', 64);
 oi = oiSet(oi,'optics offaxis method','skip');
 oi = oiCompute(oi, scene);
 oi = oiSet(oi, 'name', illuminant);

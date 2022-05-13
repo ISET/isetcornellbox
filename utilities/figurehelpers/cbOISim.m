@@ -65,8 +65,8 @@ T1 = thisR.set('asset', rootST1.name, 'world translate', [0.012 0.003 0.125]);
 assetTreeNameMCC = 'mccCB';
 mccCB = piAssetLoad(assetTreeNameMCC);
 piRecipeMerge(thisR, mccCB.thisR, 'node name', mccCB.mergeNode);
-thisR.set('asset', 'MCC_B', 'world position', [0 0.035,0.125]);
-thisR.set('asset', 'MCC_B', 'world rotation', [0 0 1]);
+thisR.set('asset', 'MCC_B', 'world position', [0.006 0.035,0.125]);
+thisR.set('asset', 'MCC_B', 'world rotation', [4 0 1]);
 
 if ~isempty(mccTrans)
     thisR.set('asset', 'MCC_B', 'world translate', mccTrans);
@@ -88,7 +88,7 @@ wRefl = refl(:, 3);
 thisR = cbAssignMaterial(thisR, bunnyMatName, wRefl);
 
 thisR.set('asset', '001_Bunny_O', 'world position', [0.098 0.058 0]);
-thisR.set('asset', '001_Bunny_O', 'scale', 1.42);
+thisR.set('asset', '001_Bunny_O', 'scale', 1.445);
 thisR.set('asset', bunnychart.mergeNode, 'world rotate', [0 3 0]);
 % thisR.assets.show
 %}
@@ -99,7 +99,7 @@ thisR.set('rays per pixel',nRaysPerPixel);
 thisR.set('nbounces',nBounces);
 thisR.set('fov', 84);
 thisR.set('film diagonal', 7.056);
-thisR.set('sampler subtype', 'sobol');
+thisR.set('sampler subtype', 'halton');
 %% Add RTF lens
 % lensFile = fullfile(cboxRootPath, 'data', 'lens', 'pixel4a-rearcamera-ellipse-raytransfer.json');
 cameraRTF = piCameraCreate(lensType,'lensfile',lensFile);

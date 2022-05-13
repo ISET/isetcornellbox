@@ -1,0 +1,13 @@
+% Spectral reflectance
+wave = 400:10:700;
+refl = ieReadSpectra('cboxSurfaces', wave);
+rRefl = refl(:, 1);
+gRefl = refl(:, 2);
+wRefl = refl(:, 3);
+
+lightName = 'cbox-lights-1';
+lgtSpd = ieReadSpectra(lightName, wave);
+
+ieNewGraphWin;
+hold all;
+plot(wave, rRefl)
