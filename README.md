@@ -1,20 +1,19 @@
 # isetcornellbox
 Data and scripts for evaluating the accuracy of simulating Google Pixel 4a images of a constructed and calibrated Cornell Box 
 
-In this arXiv paper we describe constructing a Cornell Box, measuring its properties, and acquiring images of the box using a Google Pixel 4a.  We then used ISETCam and ISET3d tools to simulate the end-to-end process (physics to raw digital values).
+The arXiv paper cited below describes constructing a Cornell Box, measuring its properties, and acquiring images of the box using a Google Pixel 4a.  We then used ISETCam and ISET3d tools to simulate the end-to-end process (physics to raw digital values).
 
-The key data and analyses of these data - comparing the measurements with the simulation - are implemented in this repository.  The calculations in this repository depend on ISETCam and ISET3d.
+The key data and analyses of these data - comparing the measurements with the simulation - are implemented in this repository.  
 
-The main scripts to recreate key figures are
+The calculations in this repository depend on [ISETCam](https://github.com/ISET/isetcam/wiki) and [ISET3d (v3)](https://github.com/ISET/iset3d/wiki). The scripts to recreate key figures are
 
 * Script 1
 * Script 2
 * And so forth
 
-Maybe we put LiveScript versions of these scripts in the wiki page?
+LiveScript versions of these scripts can be found on the repository's wiki page.
 
 **Reference**
-
 
 [Accurate smartphone camera simulation using 3D scenes](https://arxiv.org/abs/2201.07411)
 <br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
