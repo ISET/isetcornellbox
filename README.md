@@ -13,11 +13,15 @@ The main scripts to recreate key figures are
 
 Maybe we put LiveScript versions of these scripts in the wiki page?
 
-Reference:
+**Reference**
+
 
 [Accurate smartphone camera simulation using 3D scenes](https://arxiv.org/abs/2201.07411)
-<p>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
+<br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
+<br> arXiv:2201.07411 [eess.IV]
 
-<bold>Abstract</bold>
-<p>
-We assess the accuracy of a smartphone camera simulation. The simulation is an end-to-end analysis that begins with a physical description of a high dynamic range 3D scene and includes a specification of the optics and the image sensor. The simulation is compared to measurements of a physical version of the scene. The image system simulation accurately matched measurements of optical blur, depth of field, spectral quantum efficiency, scene inter-reflections, and sensor noise. The results support the use of image systems simulation methods for soft prototyping cameras and for producing synthetic data in machine learning applications.
+**Abstract**
+
+> We assess the accuracy of a smartphone camera simulation. The simulation is an end-to-end analysis that begins with a physical description of a high dynamic range 3D scene and includes a specification of the optics and the image sensor. The simulation is compared to measurements of a physical version of the scene. The image system simulation accurately matched measurements of optical blur, depth of field, spectral quantum efficiency, scene inter-reflections, and sensor noise. The results support the use of image systems simulation methods for soft prototyping cameras and for producing synthetic data in machine learning applications.
+
+  
