@@ -31,7 +31,7 @@ for ii=1:numel(validRows)
     plot(mtfRaw(validRows{ii}, 1), mtfRaw(validRows{ii}, 3), 'LineWidth', 8);
 end
 grid on; box on;
-xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
+xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (MTF)');
 legend('On-axis', 'Film height@1.5mm', 'Film height@2.1mm',...
         'Film height@2.6mm', 'Film height@2.8mm',...
         'Film height@3.5mm');
@@ -44,5 +44,5 @@ lensVignet = riRaw(:,2);
 ieNewGraphWin; hold all;
 plot(pixPos, lensVignet, 'LineWidth', 8);
 grid on; box on;
-xlabel('Position (mm)'); ylabel('Relative Intensity (a.u.)');
+xlabel('Position (mm)'); ylabel('Relative Illumination');
 xlim([0 3.5])
