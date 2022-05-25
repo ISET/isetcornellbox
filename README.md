@@ -7,11 +7,11 @@ The key data and analyses of these data - comparing the measurements with the si
 
 The calculations in this repository depend on [ISETCam](https://github.com/ISET/isetcam/wiki) and [ISET3d (v3)](https://github.com/ISET/iset3d/wiki). The scripts to recreate key figures are
 
-* Script 1
-* Script 2
+* Figure_1
+* Figure_2
 * And so forth
 
-LiveScript versions of these scripts can be found on the repository's wiki page.
+LiveScript versions of these scripts are linked to on the repository's wiki page.
 
 **Reference**
 
@@ -21,6 +21,6 @@ LiveScript versions of these scripts can be found on the repository's wiki page.
 
 **Abstract**
 
-> We assess the accuracy of a smartphone camera simulation. The simulation is an end-to-end analysis that begins with a physical description of a high dynamic range 3D scene and includes a specification of the optics and the image sensor. The simulation is compared to measurements of a physical version of the scene. The image system simulation accurately matched measurements of optical blur, depth of field, spectral quantum efficiency, scene inter-reflections, and sensor noise. The results support the use of image systems simulation methods for soft prototyping cameras and for producing synthetic data in machine learning applications.
+We assess the accuracy of a smartphone camera simulation. The simulation is an end-to-end analysis that begins with a physical description of a high dynamic range 3D scene and includes a specification of the optics and the image sensor. The simulation is compared to measurements of a physical version of the scene. The image system simulation accurately matched measurements of optical blur, depth of field, spectral quantum efficiency, scene inter-reflections, and sensor noise. The results support the use of image systems simulation methods for soft prototyping cameras and for producing synthetic data in machine learning applications.
 
   
