@@ -1,9 +1,15 @@
 % QEcolorfilterfitting
-% Get colorfilter transformation 
+%
+% Estimate a color filter transformation from the manufacturer's spec
+% to something that more closely fits the measured MCC data acquired
+% by the Pixel 4a.
+%
 % This is used for analysis when focus distance is 0.55 m
+%
 
 %%
 ieInit;
+
 %%
 % {
 tmp = load('p4aLensVignet_dc_p55_pos1.mat', 'pixel4aLensVignetSlope');
