@@ -1,7 +1,10 @@
 function [scene, oi] = cbMccSceneOISim(varargin)
-% What does this do?
+% Create a simulated macbeth image scene and oi
+%
+% The OI is the the sensor irradiance we expect.
 %
 % See also
+%
 
 varargin = ieParamFormat(varargin);
 p = inputParser;
@@ -17,7 +20,7 @@ mccName    = p.Results.mccname;
 
 %% Compute scene and oi
 
-% scene
+% MCC scene
 scene = sceneCreate('macbeth', patchSize, wave,...
                         mccName, true);
 scene = sceneSet(scene, 'fov', sceneGet(scene, 'fov') * 2);
@@ -25,7 +28,7 @@ preserveMean = false;
 scene = sceneAdjustIlluminant(scene, illuminant, preserveMean);
 scene = sceneSet(scene, 'name', illuminant);
 
-% oi - skip all lens vignetting effects
+% MCC oi - we skip all lens vignetting effects
 oi = oiCreate('default');
 oi = oiSet(oi, 'bitdepth', 64);
 oi = oiSet(oi,'optics offaxis method','skip');

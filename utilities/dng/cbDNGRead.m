@@ -1,5 +1,5 @@
 function [sensor, info, ip] = cbDNGRead(imgName, varargin)
-% A small wrapper of DNG file read and ip compute
+% Read a DNG file we acquired and return it in a sensor (Sony IMX363) struct
 %
 % Synopsis:
 %   [sensor, info, ip] = cbDNGRead(imgPath, varargin)
@@ -15,7 +15,8 @@ function [sensor, info, ip] = cbDNGRead(imgName, varargin)
 %   sensor  - DNG file loaded in sensor
 %   info    - DNG info struct
 %   ip      - IP with demosaicking only
-%%
+
+%% Parse inputs
 varargin = ieParamFormat(varargin);
 p = inputParser;
 p.addRequired('imgName', @ischar);
@@ -27,6 +28,7 @@ p.parse(imgName, varargin{:})
 crop = p.Results.crop;
 demos = p.Results.demosaic;
 transColorFilter = p.Results.transcolorfilter;
+
 %% Read sensor
 [sensor, info] = sensorDNGRead(imgName, 'crop',crop);
 sensor = cbSensorCorrect(sensor, 'transcolorfilter', transColorFilter);
