@@ -22,10 +22,10 @@ sensor = sensorSet(sensor, 'pixel read noise volts', readNoiseVolt);
 sensor = sensorSet(sensor, 'prnu level', prnu);
 % sensor = sensorSet(sensor, 'conversion gain', convGain);
 %% Correct QE
+wave = 400:10:700;
+sensor = sensorSet(sensor, 'wave', wave);
 if transColorFilter
-    wave = 400:10:700;
     cf = ieReadSpectra('p4aCorrected.mat', wave);
-    sensor = sensorSet(sensor, 'wave', wave);
     sensor = sensorSet(sensor, 'color filters', cf);
     sensor = sensorSet(sensor, 'ir filter', ones(1, numel(wave)));
 end

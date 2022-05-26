@@ -126,10 +126,9 @@ ind = sub2ind(sz, indexY+sz(1)/2-1, indexX+sz(2)/2-1);
 ieNewGraphWin; hold all;
 % Zemax & RTF
 % plot(lensVignetZemax(:,1), lensVignetZemax(:,2), 'LineWidth', 8);
-plot(filmHeight, lensVignetFullRTF(ind), 'LineWidth', 8);
+plot(filmHeight, lensVignetFullRTF(ind), 'k-', 'LineWidth', 8);
 plot(filmHeight, tmp.pixel4aLensVignetSlope(ind), 'LineWidth', 8)
-plot(filmHeight, lensVignetFullRTFCorr(ind), 'LineWidth', 8);
-legend('RTF/Zemax', 'Measured','Simulated');
+legend('PBRT/Zemax', 'Measured');
 grid on; box on; ylim([0 1]); xlim([0 3.5]);
 xlabel('Position (mm)'); ylabel('Relative illuminationm');
 

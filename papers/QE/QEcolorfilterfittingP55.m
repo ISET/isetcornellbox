@@ -209,7 +209,7 @@ end
 [cQE, mOneIllu, rgbMeanSimOneIllu, rgbMeanMeasOneIllu] = cbQEAnalysis(imgNames, illuminants,...
                         cornerPointsMeas, cornerPointsSim,...
                         vignetting, 'method', 'nonnegative');
-rgbMeanSimOneIlluCor = rgbMeanSimOneIllu * mMC;
+rgbMeanSimOneIlluCor = rgbMeanSimOneIllu * mOneIllu;
 %
 %{
 cf = sensorGet(sensor, 'colorfilters');
