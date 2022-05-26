@@ -97,7 +97,7 @@ end
 %
 [cQE, mMC2, rgbMeanSimMC, rgbMeanMeasMC] = cbQEAnalysis(imgNames, illuminants,...
                         cornerPointsMeas, cornerPointsSim,...
-                        vignetting, 'method', 'nonnegative','fluoremove', false);
+                        vignetting, 'method', 'nonnegative','fluoremove', true);
 rgbMeanSimMCCor = rgbMeanSimMC * mMC2;
 
 %{
