@@ -1,6 +1,8 @@
 function [scene, oi] = cbMccSceneOISim(varargin)
+% What does this do?
+%
+% See also
 
-%%
 varargin = ieParamFormat(varargin);
 p = inputParser;
 p.addParameter('illuminant', '20201023-illA-Average.mat', @ischar);
@@ -14,6 +16,7 @@ patchSize  = p.Results.patchsize;
 mccName    = p.Results.mccname; 
 
 %% Compute scene and oi
+
 % scene
 scene = sceneCreate('macbeth', patchSize, wave,...
                         mccName, true);
@@ -28,4 +31,5 @@ oi = oiSet(oi, 'bitdepth', 64);
 oi = oiSet(oi,'optics offaxis method','skip');
 oi = oiCompute(oi, scene);
 oi = oiSet(oi, 'name', illuminant);
+
 end
