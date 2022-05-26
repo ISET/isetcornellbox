@@ -1,5 +1,5 @@
 function [sensor, info, ip] = cbDNGRead(imgName, varargin)
-% Read a DNG file we acquired and return it in a sensor (Sony IMX363) struct
+% Read a DNG data file and return the measurements in a Sony IMX363 sensor
 %
 % Synopsis:
 %   [sensor, info, ip] = cbDNGRead(imgPath, varargin)
