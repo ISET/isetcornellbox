@@ -1,7 +1,19 @@
 function [correctedQE, mTrans, rgbMeanSim, rgbMeanMeas] = cbQEAnalysis(imgNames, illuminants,...
-                                              cropCornersMeas,...
-                                              cropCornersSim,...
-                                              vignetting, varargin)
+    cropCornersMeas,...
+    cropCornersSim,...
+    vignetting, varargin)
+% Derive the corrected color filters from manufacturer's suggestion
+%
+% Synopsis
+%
+% Input
+%
+% Optional key/value
+%
+% Output
+%
+% See also
+
 %{
     imgNames = {'IMG_20201024_123128.dng', 'IMG_20201024_122900.dng',...
                 'IMG_20201024_122631.dng'};
@@ -20,7 +32,7 @@ function [correctedQE, mTrans, rgbMeanSim, rgbMeanMeas] = cbQEAnalysis(imgNames,
                                          cropCornerSim,...
                                          vignetting); 
 %}
-%%
+
 %% parser
 varargin = ieParamFormat(varargin);
 p = inputParser;
@@ -34,7 +46,7 @@ p.addParameter('patchsize', 32, @isnumeric);
 p.addParameter('method', 'nonnegative', @ischar);
 p.addParameter('fluoremove', false, @islogical);
 p.parse(imgNames, illuminants, cropCornersMeas,...
-            cropCornersSim, vignetting, varargin{:});
+    cropCornersSim, vignetting, varargin{:});
 patchSize = p.Results.patchsize;
 method = p.Results.method;
 fluoremove = p.Results.fluoremove;
@@ -50,11 +62,11 @@ lightNameCWF = 'illCWF-20201023.mat'; % CWF
 lightNameDay = 'illDay-20201023.mat'; % Daylight
 
 [sceneA, oiA] = cbMccSceneOISim('illuminant', lightNameA, 'wave', wave,...
-                                'patch size', patchSize);
+    'patch size', patchSize);
 [sceneCWF, oiCWF] = cbMccSceneOISim('illuminant', lightNameCWF, 'wave', wave,...
-                                'patch size', patchSize);       
+    'patch size', patchSize);
 [sceneDay, oiDay] = cbMccSceneOISim('illuminant', lightNameDay, 'wave', wave,...
-                                'patch size', patchSize); 
+    'patch size', patchSize);
 
 %{
 sceneWindow(sceneA);
@@ -70,15 +82,15 @@ for ii=1:numel(imgNames)
     thisIllu = illuminants{ii};
     % Get the mean rgb for this sensor
     [thisSensorMeas, thisInfo, thisRGBMeanMeas, ~] = cbMccChipsDV(imgNames{ii},...
-                                                              'corner point', thisCropMeas,...
-                                                              'vignetting', vignetting);
+        'corner point', thisCropMeas,...
+        'vignetting', vignetting);
     if fluoremove
         fluoInd = [3 6 10 11 14 19];
         thisRGBMeanMeas(fluoInd,:) = 0;
     end
     % Pad the rgb meas values
     rgbMeanMeas((ii-1) * 24+1:ii*24,:) = thisRGBMeanMeas;
-    
+
     %% Simulate corresponding sensor response
     thisSensorSim = thisSensorMeas;
     switch ieParamFormat(thisIllu)
@@ -90,12 +102,12 @@ for ii=1:numel(imgNames)
             oi = oiDay;
     end
     [thisSensorSim, thisRGBMeanSim, ~] = cbMccSensorSim(oi, thisSensorSim, cropCornersSim);
-    
+
     if fluoremove
         fluoInd = [3 6 10 11 14 19];
         thisRGBMeanSim(fluoInd,:) = 0;
     end
-    
+
     % Pad the rgb sim values
     rgbMeanSim((ii-1) * 24+1:ii*24,:) = thisRGBMeanSim;
 end
@@ -104,6 +116,10 @@ end
 
 
 mTrans = cbMccFit(rgbMeanSim, rgbMeanMeas, 'method', method);
+
+correctedQE = [];
+end
+
 %{
 % Exploring the offset
 rgbMeanSimPad = [rgbMeanSim, ones(72, 1)];
@@ -137,6 +153,3 @@ axis square; identityLine;
 xlabel('meas'); ylabel('sim')
 %}
 % cbMccPredEval('measurement', rgbMeanMeas, 'prediction', min(rgbMeanSim * mTrans, 1024));
-correctedQE = [];
-%%
-end
