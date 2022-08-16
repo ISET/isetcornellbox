@@ -105,10 +105,10 @@ lsfSimFront = mtfDataSimFront.lsf;
 % MTF curve
 % {
 ieNewGraphWin; hold all; 
-plot(freqMeasBack, mtfMeasBack,':k','LineWidth', 3);
-plot(freqSimBack, mtfSimBack, 'k','LineWidth', 3);
-plot(freqMeasFront, mtfMeasFront, ':r', 'LineWidth', 3);
-plot(freqSimFront, mtfSimFront, 'r', 'LineWidth', 3);
+plot(freqMeasBack, mtfMeasBack,'Color', [0, 0.4410, 0.7410],'LineWidth', 3);
+plot(freqSimBack, mtfSimBack, 'Color', [0.85, 0.325, 0.098],'LineWidth', 3);
+plot(freqMeasFront, mtfMeasFront, ':', 'Color', [0, 0.441, 0.741], 'LineWidth', 3);
+plot(freqSimFront, mtfSimFront, ':', 'Color',[0.85, 0.325, 0.098], 'LineWidth', 3);
 box on; grid on;
 xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
 xlim([0 350]); ylim([0 1])
@@ -119,12 +119,12 @@ title('Focused @0.5m');
 % LSF
 % {
 ieNewGraphWin; hold all;
-plot(lsfxMeasBack, lsfMeasBack, ':k', 'LineWidth', 3);
+plot(lsfxMeasBack, lsfMeasBack, 'Color', [0, 0.4410, 0.7410], 'LineWidth', 3);
 % Slight shift for curve allignment
-plot(lsfxSimBack-0.0009, lsfSimBack, 'k', 'LineWidth', 3);
-plot(lsfxMeasFront+0.0050, lsfMeasFront, ':r', 'LineWidth', 3);
-plot(lsfxSimFront+0.002, lsfSimFront, 'r', 'LineWidth', 3);
-xlim([-0.06 0.06]); ylim([0 1]);
+plot(lsfxSimBack-0.0009, lsfSimBack, 'Color', [0.85, 0.325, 0.098],'LineWidth', 3);
+plot(lsfxMeasFront+0.0050, lsfMeasFront, ':', 'Color', [0, 0.441, 0.741], 'LineWidth', 3);
+plot(lsfxSimFront+0.002, lsfSimFront, ':', 'Color',[0.85, 0.325, 0.098],'LineWidth', 3);
+xlim([-0.06 0.06]); ylim([0 1]); xticks(-0.06:0.03:0.06); yticks(0:0.5:1)
 box on; grid on; 
 legend('LSF@0.5m-Meas', 'LSF@0.5m-Sim', 'LSF@0.3m-Meas', 'LSF@0.3m-Sim');
 title('Focused @0.5m');
@@ -234,10 +234,10 @@ lsfxSimFront2 = mtfDataSimFront2.lsfx;
 lsfSimFront2 = mtfDataSimFront2.lsf;
 
 ieNewGraphWin; hold all; 
-plot(freqMeasBack2, mtfMeasBack2, ':k', 'LineWidth', 8);
-plot(freqSimBack2, mtfSimBack2, 'k', 'LineWidth', 8);
-plot(freqMeasFront2, mtfMeasFront2, ':r', 'LineWidth', 8);
-plot(freqSimFront2, mtfSimFront2, 'r', 'LineWidth', 8);
+plot(freqMeasBack2, mtfMeasBack2, 'Color', [0, 0.4410, 0.7410], 'LineWidth', 3);
+plot(freqSimBack2, mtfSimBack2, 'Color', [0.85, 0.325, 0.098], 'LineWidth', 3);
+plot(freqMeasFront2, mtfMeasFront2, ':','Color', [0, 0.4410, 0.7410], 'LineWidth', 3);
+plot(freqSimFront2, mtfSimFront2, ':','Color', [0.85, 0.325, 0.098], 'LineWidth', 3);
 box on; grid on;
 xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
 xlim([0 350]); ylim([0 1])
@@ -247,10 +247,10 @@ title('Focused @0.3m');
 % LSF
 % {
 ieNewGraphWin; hold all;
-plot(lsfxMeasBack2+0.0008, lsfMeasBack2, ':k', 'LineWidth', 8);
-plot(lsfxSimBack2-0.0010, lsfSimBack2, 'k', 'LineWidth', 8);
-plot(lsfxMeasFront2-0.0012, lsfMeasFront2, ':r', 'LineWidth', 8);
-plot(lsfxSimFront2+0.00175, lsfSimFront2, 'r', 'LineWidth', 8);
+plot(lsfxMeasBack2+0.0008, lsfMeasBack2, 'Color', [0, 0.4410, 0.7410], 'LineWidth', 3);
+plot(lsfxSimBack2-0.002, lsfSimBack2, 'Color', [0.85, 0.325, 0.098], 'LineWidth', 3);
+plot(lsfxMeasFront2-0.0012, lsfMeasFront2, ':','Color', [0, 0.4410, 0.7410], 'LineWidth', 3);
+plot(lsfxSimFront2+0.00175, lsfSimFront2, ':','Color', [0.85, 0.325, 0.098], 'LineWidth', 3);
 box on; grid on;
 xlabel('Pixel position'); ylabel('Relative intensity');
 xlim([-0.06 0.06]); ylim([0 1])
