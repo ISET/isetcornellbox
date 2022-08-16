@@ -45,6 +45,7 @@ filmHeightMeasFront = cbSensorLoc2FilmHeight(sensorMeasFront,...
 
 % NOTE: 0.59847 is too far for focusing in front. Move it closer
 % Load oi
+% Focus back: filmdist_0.49234mm
 mtfPath = fullfile(cboxRootPath, 'local', 'simulation', 'slantedBar');
 
 mtfFile = 'CBRTF_slantedEdge_filmdist_0.49234mm.mat';
@@ -104,10 +105,10 @@ lsfSimFront = mtfDataSimFront.lsf;
 % MTF curve
 % {
 ieNewGraphWin; hold all; 
-plot(freqMeasBack, mtfMeasBack,':k','LineWidth', 8);
-plot(freqSimBack, mtfSimBack, 'k','LineWidth', 8);
-plot(freqMeasFront, mtfMeasFront, ':r', 'LineWidth', 8);
-plot(freqSimFront, mtfSimFront, 'r', 'LineWidth', 8);
+plot(freqMeasBack, mtfMeasBack,':k','LineWidth', 3);
+plot(freqSimBack, mtfSimBack, 'k','LineWidth', 3);
+plot(freqMeasFront, mtfMeasFront, ':r', 'LineWidth', 3);
+plot(freqSimFront, mtfSimFront, 'r', 'LineWidth', 3);
 box on; grid on;
 xlabel('Spatial frequency (cy/mm)'); ylabel('Contrast reduction (SFR)');
 xlim([0 350]); ylim([0 1])
@@ -118,10 +119,11 @@ title('Focused @0.5m');
 % LSF
 % {
 ieNewGraphWin; hold all;
-plot(lsfxMeasBack, lsfMeasBack, ':k', 'LineWidth', 8);
-plot(lsfxSimBack-0.0009, lsfSimBack, 'k', 'LineWidth', 8);
-plot(lsfxMeasFront+0.0050, lsfMeasFront, ':r', 'LineWidth', 8);
-plot(lsfxSimFront+0.002, lsfSimFront, 'r', 'LineWidth', 8);
+plot(lsfxMeasBack, lsfMeasBack, ':k', 'LineWidth', 3);
+% Slight shift for curve allignment
+plot(lsfxSimBack-0.0009, lsfSimBack, 'k', 'LineWidth', 3);
+plot(lsfxMeasFront+0.0050, lsfMeasFront, ':r', 'LineWidth', 3);
+plot(lsfxSimFront+0.002, lsfSimFront, 'r', 'LineWidth', 3);
 xlim([-0.06 0.06]); ylim([0 1]);
 box on; grid on; 
 legend('LSF@0.5m-Meas', 'LSF@0.5m-Sim', 'LSF@0.3m-Meas', 'LSF@0.3m-Sim');
@@ -169,6 +171,7 @@ filmHeightMeasFront2 = cbSensorLoc2FilmHeight(sensorMeasFront,...
 %% Simulation: Focus front
 mtfPath = fullfile(cboxRootPath, 'local', 'simulation', 'slantedBar');
 
+% Front: filmdist 0.57624mm.
 mtfFile = 'CBRTF_slantedEdge_filmdist_0.57624mm.mat';
 
 load(fullfile(mtfPath, mtfFile));
