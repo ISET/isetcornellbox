@@ -10,6 +10,9 @@ The calculations in this repository depend on [ISETCam](https://github.com/ISET/
 
 The arXiv paper is a pre-print of the published article. 
 
+1. [Figure 1](https://htmlpreview.github.io/?https://github.com/ISET/iset3d/blob/main/tutorials/introduction/t_piIntro.html)
+2. [Figure 2](https://htmlpreview.github.io/?https://github.com/ISET/iset3d/blob/main/tutorials/introduction/t_piIntro.html)
+
 **ARXIV Reference**
 
 [Accurate smartphone camera simulation using 3D scenes](https://arxiv.org/abs/2201.07411)
