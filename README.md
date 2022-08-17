@@ -7,6 +7,8 @@ The key data and analyses of these data - comparing the measurements with the si
 
 The calculations in this repository depend on [ISETCam](https://github.com/ISET/isetcam/wiki) and [ISET3d (v3)](https://github.com/ISET/iset3d/wiki). The scripts to recreate key figures are
 
+![image](https://user-images.githubusercontent.com/1837145/185008646-bcc9ebf4-87d8-464b-87e6-69dfd1182278.png)
+
 * Figure_1
 * Figure_2
 * And so forth
