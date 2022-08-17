@@ -4,13 +4,13 @@ This repository includes data and software to make the computational methods in 
 
 ![image](https://user-images.githubusercontent.com/1837145/185008646-bcc9ebf4-87d8-464b-87e6-69dfd1182278.png)
 
-This paper describes constructing a Cornell Box, measuring its properties, and acquiring images of the box using a Google Pixel 4a.  We then used ISETCam and ISET3d tools to simulate the the scene radiance of the box, the optics of the phone, and the sensor.  This is an end-to-end process (physics to raw digital values) of the iamge system.
+This paper describes constructing a Cornell Box, measuring its properties, and acquiring images of the box using a Google Pixel 4a.  We then used ISETCam and ISET3d tools to simulate the the scene radiance of the box, the optics of the phone, and the sensor.  This is an end-to-end simulation (scene radiance to raw digital values) of the iamge system.
 
 The calculations in this repository depend on [ISETCam](https://github.com/ISET/isetcam/wiki) and [ISET3d (v3)](https://github.com/ISET/iset3d/wiki). The calculations are illustrated in the LiveScripts that are linked on the right side of this page.
 
-The arXiv paper cited below is a pre-print of the published article. 
+The arXiv paper is a pre-print of the published article. 
 
-** ARXIV Reference**
+**ARXIV Reference**
 
 [Accurate smartphone camera simulation using 3D scenes](https://arxiv.org/abs/2201.07411)
 <br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
