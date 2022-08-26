@@ -23,7 +23,7 @@ The arXiv paper is a pre-print of the published article.
 
 **ARXIV Reference**
 
-[Accurate smartphone camera simulation using 3D scenes](https://arxiv.org/abs/2201.07411)
+[Accurate smartphone camera simulation using 3D scenes](https://stanford.edu/~wandell/data/papers//2022-CornellBoxValidation-Lyu.pdf)
 <br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
 <br> arXiv:2201.07411 [eess.IV]
 
