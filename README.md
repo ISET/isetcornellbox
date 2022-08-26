@@ -12,9 +12,9 @@ The arXiv paper is a pre-print of the published article.
 
 - [Figures 1 and 2](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_01_2.html) - Cornell box physical measurements and optics modeling
 - [Figure 3](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_03.html) - Color channel calibration and correction
-- [Figure 4](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_04.html) - Color channel calibration and correction
-- [Figure 5](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_05.html) - Color channel calibration and correction
-- [Figure 6 and 7](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_06_7.html) - Color channel calibration and correction
+- [Figure 4](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_04.html) - Qualitative comparison of measured and simulated images
+- [Figure 5](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_05.html) - Relative illumination
+- [Figure 6 and 7](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_06_7.html) - Optics validations (linespread and MTF)
 - [Figure 8](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_08.html) - Sensor noise validation
 - [Figure 9](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_09.html) - Inter-reflections validation
 - [Figure 10](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_10.html) - Color channel validation
