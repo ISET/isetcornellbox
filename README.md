@@ -1,6 +1,11 @@
 # isetcornellbox
 
-This repository includes data and software to make the computational methods in this paper reproducible and shared.
+This repository shaers the data and software related to this article:
+
+**Reference**
+
+[Accurate smartphone camera simulation using 3D scenes](https://stanford.edu/~wandell/data/papers//2022-CornellBoxValidation-Lyu.pdf)
+<br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
 
 ![image](https://user-images.githubusercontent.com/1837145/185008646-bcc9ebf4-87d8-464b-87e6-69dfd1182278.png)
 
@@ -20,14 +25,9 @@ The arXiv paper is a pre-print of the published article.
 - [Figure 10](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_10.html) - Color channel validation
 - [Figure 11](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_11.html) - Conversion gain estimation from digital values
 
+**ARXIV Abstract**
 
-**ARXIV Reference**
-
-[Accurate smartphone camera simulation using 3D scenes](https://stanford.edu/~wandell/data/papers//2022-CornellBoxValidation-Lyu.pdf)
-<br>Zheng Lyu, Thomas Goossens, Brian Wandell, Joyce Farrell
 <br> arXiv:2201.07411 [eess.IV]
-
-**Abstract**
 
 We assess the accuracy of a smartphone camera simulation. The simulation is an end-to-end analysis that begins with a physical description of a high dynamic range 3D scene and includes a specification of the optics and the image sensor. The simulation is compared to measurements of a physical version of the scene. The image system simulation accurately matched measurements of optical blur, depth of field, spectral quantum efficiency, scene inter-reflections, and sensor noise. The results support the use of image systems simulation methods for soft prototyping cameras and for producing synthetic data in machine learning applications.
 
