@@ -10,8 +10,16 @@ The calculations in this repository depend on [ISETCam](https://github.com/ISET/
 
 The arXiv paper is a pre-print of the published article. 
 
-1. [Figures 1 and 2](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_01_2.html) - Cornell box physical measurements and optics modeling
-2. [Figure 3](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_03.html) - Color channel calibration and correction
+- [Figures 1 and 2](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_01_2.html) - Cornell box physical measurements and optics modeling
+- [Figure 3](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_03.html) - Color channel calibration and correction
+- [Figure 4](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_04.html) - Color channel calibration and correction
+- [Figure 5](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_05.html) - Color channel calibration and correction
+- [Figure 6 and 7](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_06_07.html) - Color channel calibration and correction
+- [Figure 8](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_08.html) - Color channel calibration and correction
+- [Figure 9](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_09.html) - Color channel calibration and correction
+- [Figure 10](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_10.html) - Color channel calibration and correction
+- [Figure 11](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_11.html) - Color channel calibration and correction
+
 
 **ARXIV Reference**
 
