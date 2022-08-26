@@ -10,7 +10,7 @@ The calculations in this repository depend on [ISETCam](https://github.com/ISET/
 
 The arXiv paper is a pre-print of the published article. 
 
-1. [Figures 1 and 2](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_01_2.html) - What it is
+1. [Figures 1 and 2](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_01_2.html) - Cornell box physical measurements and optics modeling
 2. [Figure 3](https://htmlpreview.github.io/?https://github.com/ISET/isetcornellbox/blob/main/papers/IEEE_2022/Figure_03.html) - What it is.
 
 **ARXIV Reference**
