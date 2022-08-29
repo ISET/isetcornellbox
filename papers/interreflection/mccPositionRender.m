@@ -2,7 +2,7 @@
 
 %%
 ieInit;
-if ~piDockerExists, piDockerConfig; end
+% if ~piDockerExists, piDockerConfig; end
 
 
 %% Load real measured data
